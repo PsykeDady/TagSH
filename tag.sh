@@ -29,6 +29,10 @@ function usage(){
 
 function addBookmark (){
 	Book=$HOME/.local/share/user-places.xbel
+	if [[ ! -e $Book ]]; then 
+		echo "file user-places non presente"
+		return
+	fi 
 	if [[ $(cat "$Book"|grep "\.tag") ]]; then
 		echo "bookmark presente"
 		return 
