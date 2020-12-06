@@ -38,7 +38,7 @@ function addBookmark (){
 	NB=$(cat $Book | head -$((NB-1)))
 	mv $Book $Book.old
 	echo "$NB
-<bookmark href=\"file://$HOME/.tag\">
+ <bookmark href=\"file://$HOME/.tag\">
   <title>TagSH</title>
   <info>
    <metadata>
