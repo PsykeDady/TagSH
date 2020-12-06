@@ -13,7 +13,7 @@ git clone https://github.com/PsykeDady/TagSH
 ```bash
 git clone https://github.com/PsykeDady/TagSH
 sudo mv TagSH /usr/share/TagSH # or move into a custom directory
-sudo ln /usr/share/TagSH/tag.sh /usr/bin/tagsh # or link from your custom directory, or expand your PATH env
+sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh # or link from your custom directory, or expand your PATH env
 ```
 
 ## uninstall
