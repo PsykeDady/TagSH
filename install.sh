@@ -15,6 +15,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
 
+echo "cd  $(dirname $0)"
+cd  $(dirname $0)
 
 echo "sudo cp -r TagSH /usr/share/TagSH "
 sudo cp -r . /usr/share/TagSH 
