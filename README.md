@@ -6,7 +6,7 @@ Language of script messages is italian for now. Sorry international people
 ## install 
 ```bash
 git clone https://github.com/PsykeDady/TagSH
-./install.sh
+./TagSH/install.sh
 ```
 
 ### or manually
