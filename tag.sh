@@ -14,14 +14,14 @@ function usage(){
 	nome=$0
 	nome=$(basename $nome)
 	echo -e	 "\nCome si usa: "
-	echo -e  "\t$nome [opzioni] /percorso/cartella nometag [nome collegamento, opzionale]\n"
+	echo -e  "\t$nome [opzioni] percorso nometag [nome collegamento]\n"
 	echo -e  "OPZIONI DISPONIBILI:"
-	echo -e  "\t-d o --debug per attivare la debug mode\n"
+	echo -e  "\t-d oppure --debug per attivare la debug mode\n"
 	echo -e  "COSA PUOI FARE:"
 	echo -e  "\t- usare sia path assoluti che relativi\n"
 	echo -e  "COSA NON PUOI FARE:"
-	echo -e  "\t- usare caratteri nel tag che non siano lettere o numeri"
-	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome (specificando un nome collegmento però, puoi cambiare il nome)\n"
+	echo -e  "\t- usare caratteri nel tag o nel collegamento che non siano lettere o numeri"
+	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome (specificando un nome collegamento però, puoi cambiare il nome)\n"
 	echo -e  "ALTRO DA SAPERE:"
 	echo -e  "\t- attualmente per cancellare un tag devi andare nella cartella $HOME/.tag ed eliminare la cartella che porta il suo nome"
 	echo -e  "\t- per rinominarlo, rinomina la cartella"
@@ -95,6 +95,12 @@ function attTag() {
 	fi
 	if [[ ! $ntag =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
 		echo "al momento il tag può contenere solo lettere e numeri!"
+		usage
+		return -1
+	fi
+
+	if [[ ! $nlink =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
+		echo "al momento il nome del link può contenere solo lettere e numeri!"
 		usage
 		return -1
 	fi
