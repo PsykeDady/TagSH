@@ -71,73 +71,207 @@ function addBookmarkGTK (){
 }
 
 
+function attTag() {
+
+	debug=$1
+	shift
+	percorso=$1
+	ntag=$2
+	nlink=$3
+
+
+	if (( $debug==1 )); then 
+		echo "[DEBUG attTag] funzione attTag con parametri:"
+		echo -e "[DEBUG attTag]\t\tpercorso=$percorso" 
+		echo -e "[DEBUG attTag]\t\ttag=$ntag" 
+		echo -e "[DEBUG attTag]\t\tnome link=$nlink" 
+	fi
+	if [[ ! $ntag =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
+		echo "al momento il tag può contenere solo lettere e numeri!"
+		usage
+		return -1
+	fi
+
+	if [[ ! -e $percorso  ]]; then
+		echo "il file indicato non esiste!"
+		usage
+		return -1
+	fi
+
+	TAG_DIR="$HOME/.tag"
+
+	if [ ! -d "$TAG_DIR" ]; then
+		echo "La cartella non esiste, creazione di Tag"
+		if [ -e "$TAG_DIR" ]; then
+			echo "esiste un file chiamato .tag, rinominato in .tag.old"
+			#fornire qui la scelta
+			mv "$TAG_DIR" "$TAG_DIR.old" || return
+		fi
+		mkdir "$TAG_DIR" || return
+	fi
+
+	NTAGD="$TAG_DIR/$ntag"
+
+	if [ ! -d "$NTAGD" ];  then 
+		echo "nuovo tag, creo la directory"
+		mkdir "$NTAGD" || return
+	fi
+
+	abs=0
+
+	case $percorso in 
+		/* ) abs=1 ;;
+		*  ) abs=0 ;;
+	esac
+
+	if (( abs==0 )); then
+		ND="$PWD"/"$percorso";
+	else 
+		ND="$percorso"
+	fi
+
+	if [[ $nlink == "" ]]; then
+		nameTag=$(basename $ND)
+	else 
+		nameTag="$nlink"
+	fi
+
+	if (( debug==1 )); then
+		echo -e "[DEBUG attTag]\tnametag=$nametag";
+	fi
+
+	if [[ -d "$NTAGD"/"$nameTag" || -e "$NTAGD"/"$nameTag" ]]; then
+		echo "il tag esiste già, se non è il tag desiderato, cancellalo!"
+		return -1
+	fi
+
+	ln -sf "$ND" "$NTAGD"/"$nameTag" || return -1
+
+	echo 'tag associato!, controlla la directory'
+
+	addBookmark
+	addBookmarkGTK
+	
+}
+
 # MAIN
 OIFS=$IFS
 IFS=$'\n'
 
-if (( $# != 2 )); then 
+
+if (( $#<2 || 5<$# )); then 
 	echo "Numero parametri sbagliato"
 	usage
 	exit -1
 fi
 
-if [[ ! $2 =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
-	echo "al momento il tag può contenere solo lettere e numeri!"
-	usage
-	exit -1
-fi
+debug=0
+percorso=""
+tagname=""
+linkname=""
 
-if [[ ! -e $1  ]]; then
-	echo "il file indicato non esiste!"
-	usage
-	exit -1
-fi
+op=""
+# Operazioni supportate, mappatura
+# 	- a : add (default)
+# 	- r : remove
+# 	- l : list
+# 	- n : rename
+#
+# Altre opzioni
+# 	- d : debug
 
-TAG_DIR="$HOME/.tag"
-
-if [ ! -d "$TAG_DIR" ]; then
-	echo "La cartella non esiste, creazione di Tag"
-	if [ -e "$TAG_DIR" ]; then
-		echo "esiste un file chiamato .tag, rinominato in .tag.old"
-		#fornire qui la scelta
-		mv "$TAG_DIR" "$TAG_DIR.old" || exit
+while (( $# > 0 )); do 
+	if [[ $1 == "-d" || $1 == "--debug" ]] || (( debug==1 )); then 
+		echo "[DEBUG] gestendo $1"
 	fi
-	mkdir "$TAG_DIR" || exit
+	case $1 in
+		"-d"|"--debug") debug=1;;
+		"-r"|"--remove") 
+			if [[ $op != "" ]]; then
+				echo "non puoi effettuare due operazioni insieme!";
+				usage
+				exit -1;
+			fi
+			op="r";;
+		"-l"|"--list")
+			if [[ $op != "" ]]; then
+				echo "non puoi effettuare due operazioni insieme!";
+				usage
+				exit -1;
+			fi
+			op="l";;
+		"-n"|"--rename") 
+			if [[ $op != "" ]]; then
+				echo "non puoi effettuare due operazioni insieme!";
+				usage
+				exit -1;
+			fi
+			op="n";;
+		*)
+			if [[ $op == "" ]]; then
+				op="a"
+			fi
+			if (( $#<2 || 3<$# )); then
+				echo "le opzioni vanno specificate prima del percorso (numero parametri rimasti=$#)"
+				usage 
+				exit -1
+			fi
+			percorso=$1
+			shift
+			tagname=$1
+			if (($# == 2)); then 
+				shift
+				linkname=$1
+			fi
+		;;
+	esac
+	shift
+	if [[ $1 == "-d" || $1 == "--debug" ]] || (( debug==1 )); then 
+		echo "[DEBUG] numero parametri rimasti=$#"
+	fi
+done;
+
+if (( debug==1 )); then
+	echo "[DEBUG] debug mode on"
+	echo "[DEBUG] lista parametri:"
+	echo -e "[DEBUG]\t\top=$op"
+	echo -e "[DEBUG]\t\tpercorso=$percorso"
+	echo -e "[DEBUG]\t\ttagname=$tagname"
+	echo -e "[DEBUG]\t\tlinkname=$linkname"
 fi
 
-NTAGD="$TAG_DIR/$2"
+uscita=0
 
-if [ ! -d "$NTAGD" ];  then 
-	echo "nuovo tag, creo la directory"
-	mkdir "$NTAGD" || exit
+if (( $debug==1 )); then 
+		echo -e "============================="
 fi
-
-abs=0
-
-case $1 in 
-	/* ) abs=1 ;;
-	*  ) abs=0 ;;
+case $op in 
+	"a") attTag $debug $percorso $tagname $linkname;
+		uscita=$? ;
+	;;
+	"l")
+		uscita=$? ;
+	;;
+	"r")
+		uscita=$? ;
+	;;
+	"n")
+		uscita=$? ;
+	;;
+	*)	echo "stato di errore non gestito!";
+		usage;
+		uscita=-1 ;
+	;;
 esac
-
-if (( abs==0 )); then
-	ND="$PWD"/"$1";
-else 
-	ND="$1"
+if (( $debug==1 )); then 
+		echo -e "============================="
 fi
 
-nameTag=$(basename $ND)
-
-if [[ -d "$NTAGD"/"$nameTag" || -e "$NTAGD"/"$nameTag" ]]; then
-	echo "il tag esiste già, se non è il tag desiderato cancellalo"
-	exit -1
+if (( debug==1 )); then 
+	echo "[DEBUG] valore di uscita="$uscita 
 fi
 
-ln -sf "$ND" "$NTAGD" || exit -1
-
-echo 'tag associato!, controlla la directory'
-
-addBookmark
-addBookmarkGTK
+exit $uscita
 
 IFS=$OIFS
 
