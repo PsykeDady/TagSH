@@ -99,7 +99,7 @@ function attTag() {
 		return -1
 	fi
 
-	if [[ ! $nlink =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
+	if [[ $nlink != "" ]] && [[ ! $nlink =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
 		echo "al momento il nome del link può contenere solo lettere e numeri!"
 		usage
 		return -1
