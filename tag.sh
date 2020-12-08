@@ -13,17 +13,24 @@
 function usage(){
 	nome=$0
 	nome=$(basename $nome)
-	echo -e	 "\nCome si usa: \n"
-	echo -e  "\t$nome /percorso/cartella nometag\n"
-	echo -e  "puoi:"
+	echo -e	 "\nCome si usa: "
+	echo -e  "\t$nome [opzioni] /percorso/cartella nometag [nome collegamento, opzionale]\n"
+	echo -e  "OPZIONI DISPONIBILI:"
+	echo -e  "\t-d o --debug per attivare la debug mode\n"
+	echo -e  "COSA PUOI FARE:"
 	echo -e  "\t- usare sia path assoluti che relativi\n"
-	echo -e  "non puoi:"
+	echo -e  "COSA NON PUOI FARE:"
 	echo -e  "\t- usare caratteri nel tag che non siano lettere o numeri"
-	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome\n"
-	echo -e  "Altro da sapere:"
+	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome (specificando un nome collegmento però, puoi cambiare il nome)\n"
+	echo -e  "ALTRO DA SAPERE:"
 	echo -e  "\t- attualmente per cancellare un tag devi andare nella cartella $HOME/.tag ed eliminare la cartella che porta il suo nome"
 	echo -e  "\t- per rinominarlo, rinomina la cartella"
 	echo -e  "\t- per cancellare un associazione basta cancellare la cartella che si trova $HOME/.tag/nometag\n"
+	echo -e  "ESEMPI D'USO:"
+	echo -e  "\tAssociare la cartella $HOME/workspace/java sotto il tag javacodes sotto il nome di wjava:"
+	echo -e  "\t\ttagsh ~/workspace/java javacodes wjava"
+	echo -e  "\tAssociare la cartella eclipse/java (path relativo) sotto il tag javacodes senza rinominarlo:"
+	echo -e  "\t\ttagsh eclipse/java javacodes\n\n"
 	echo -e  "Per i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
 }
 
@@ -137,7 +144,7 @@ function attTag() {
 	fi
 
 	if (( debug==1 )); then
-		echo -e "[DEBUG attTag]\tnametag=$nametag";
+		echo -e "[DEBUG attTag]\tnametag=$nameTag";
 	fi
 
 	if [[ -d "$NTAGD"/"$nameTag" || -e "$NTAGD"/"$nameTag" ]]; then
@@ -250,12 +257,15 @@ case $op in
 		uscita=$? ;
 	;;
 	"l")
+		echo "funzionalità ancora non gestita!";
 		uscita=$? ;
 	;;
 	"r")
+		echo "funzionalità ancora non gestita!";
 		uscita=$? ;
 	;;
 	"n")
+		echo "funzionalità ancora non gestita!";
 		uscita=$? ;
 	;;
 	*)	echo "stato di errore non gestito!";
