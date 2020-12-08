@@ -54,7 +54,7 @@ delete:
 `tagsh [options] path tagname [link name]`
 
 OPTIONS:  
-  -d or --debug : DEBUG MODE ON
+- -d or --debug : DEBUG MODE ON
 
 WHAT YOU CAN DO:  
 - you can use abs or rel paths
