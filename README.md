@@ -54,7 +54,7 @@ delete:
 `tagsh [options] path tagname [link name]`
 
 OPTIONS:  
-- -d or --debug : DEBUG MODE ON
+- `-d` or `--debug` : DEBUG MODE ON
 
 WHAT YOU CAN DO:  
 - you can use abs or rel paths
@@ -64,9 +64,9 @@ WHAT YOU CAN'T DO:
 - you can't tag with same tag two different directory with same name (but you can name it differently!) 
 
 OTHER TRICKS:  
-- to delete unwanted tag, you can go to directory $HOME/.tag and delete dir named with tag
+- to delete unwanted tag, you can go to directory `$HOME/.tag` and delete dir named with tag
 - to rename tag, move its directory
-- to delete association, go into directory $HOME/.tag/tagname and delete dir you want to unassociate
+- to delete association, go into directory `$HOME/.tag/tagname` and delete dir you want to unassociate
 
 EXAMPLES:  
 - link directory `/home/yourname/workspace/java` with tag **javacodes** under *wjava* name:  
