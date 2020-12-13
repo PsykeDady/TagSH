@@ -1,4 +1,4 @@
-# TagSH
+# TagSH (`ver 0.3`)
 tag and categorize your directories, find them easily with your file manager or your shell
 
 Language of script messages is italian for now. Sorry international people 
@@ -54,7 +54,10 @@ delete:
 `tagsh [options] path tagname [link name]`
 
 OPTIONS:  
-- `-d` or `--debug` : DEBUG MODE ON
+- **no option**		: add tag to path or file ( optionally can write a *link name* ) 
+- `-d` or `--debug` 	: DEBUG MODE ON
+- `-l`			: list all tags
+- `-l tagname`		: list all file under specified tag
 
 WHAT YOU CAN DO:  
 - you can use abs or rel paths
@@ -73,6 +76,10 @@ EXAMPLES:
 `tagsh ~/workspace/java javacodes wjava`
 - link directory `eclipse/java` (relative path) with tag **javacodes** without rename it:  
 `tagsh eclipse/java javacodes`
+- list all tag
+`tagsh -l`
+- list all file under tag javacodes
+`tagsh -l javacodes`
 
 ## TODO list for next versions:
 
@@ -80,7 +87,7 @@ EXAMPLES:
 - command to delete an entire tag
 - command to rename a tag
 - command to name/rename an association (in order to permit different directory with same name)
-- debug mode and silent mode (default) 
+- ~~debug mode and silent mode (default)~~ 
 - implement language translations file ( ita, eng )
 - minimalist GUI and dolphin service with kdialog
 - minimalist GUI with zenity
