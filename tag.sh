@@ -4,7 +4,7 @@
 # 		TAG			#
 # -------------------------------------	#
 # Author  = PsykeDady			#
-# Version = 0.1		 		#
+# Version = 0.3		 		#
 # License = GPLv3	 		#
 # 					#
 # Read License at the end of script 	#
@@ -12,9 +12,9 @@
 
 function usage(){
 	nome=$0
-	nome=$(basename $nome)
+	nome=$(basename "$nome")
 	echo -e	 "\nCome si usa: "
-	echo -e  "\t$nome [opzioni] percorso nometag [nome collegamento]\n"
+	echo -e  "\t$nome [opzioni] percorso nometag [nomeCollegamento]\n"
 	echo -e  "OPZIONI DISPONIBILI:"
 	echo -e  "\t-d oppure --debug per attivare la debug mode\n"
 	echo -e  "COSA PUOI FARE:"
@@ -45,9 +45,9 @@ function addBookmark (){
 		return 
 	fi
 
-	NB=$(cat $Book | wc -l)
-	NB=$(cat $Book | head -$((NB-1)))
-	mv $Book $Book.old
+	NB=$(cat "$Book" | wc -l)
+	NB=$(cat "$Book" | head -$((NB-1)))
+	mv "$Book" "$Book".old
 	echo "$NB
  <bookmark href=\"file://$HOME/.tag\">
   <title>TagSH</title>
@@ -57,7 +57,7 @@ function addBookmark (){
    </metadata>
   </info>
  </bookmark>
-</xbel>" > $Book
+</xbel>" > "$Book"
 	echo "bookmark aggiunto"
 }
 
@@ -72,8 +72,8 @@ function addBookmarkGTK (){
 		return 
 	fi
 
-	cp $Book $Book.old
-	echo "file://$HOME/.tag TagSH">>$Book
+	cp "$Book" "$Book".old
+	echo "file://$HOME/.tag TagSH">>"$Book"
 	echo "bookmark GTK3 aggiunto"
 }
 
@@ -82,13 +82,35 @@ function attTag() {
 
 	debug=$1
 	shift
-	percorso=$1
-	ntag=$2
-	nlink=$3
+	
+	np=0
+
+	if [[ $1 != "" ]]; then 
+		percorso=$1
+		np=$((np+1));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		ntag=$1
+		((np++));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		nlink=$1
+		((np++));
+	fi
+	shift
+	### contrllare numero di parametri  np 
+
+	if (( np<2 || 3<np )); then 
+		echo "Numero di parametri errato ($np). L'aggiunta di un tag richiede almeno 2 parametri";
+		usage
+		return 255
+	fi;
 
 
-	if (( $debug==1 )); then 
-		echo "[DEBUG attTag] funzione attTag con parametri:"
+	if (( debug==1 )); then 
+		echo "[DEBUG attTag] funzione attTag con parametri (n=$#):"
 		echo -e "[DEBUG attTag]\t\tpercorso=$percorso" 
 		echo -e "[DEBUG attTag]\t\ttag=$ntag" 
 		echo -e "[DEBUG attTag]\t\tnome link=$nlink" 
@@ -96,19 +118,19 @@ function attTag() {
 	if [[ ! $ntag =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
 		echo "al momento il tag può contenere solo lettere e numeri!"
 		usage
-		return -1
+		return 255
 	fi
 
 	if [[ $nlink != "" ]] && [[ ! $nlink =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
 		echo "al momento il nome del link può contenere solo lettere e numeri!"
 		usage
-		return -1
+		return 255
 	fi
 
 	if [[ ! -e $percorso  ]]; then
 		echo "il file indicato non esiste!"
 		usage
-		return -1
+		return 255
 	fi
 
 	TAG_DIR="$HOME/.tag"
@@ -144,7 +166,7 @@ function attTag() {
 	fi
 
 	if [[ $nlink == "" ]]; then
-		nameTag=$(basename $ND)
+		nameTag=$(basename "$ND")
 	else 
 		nameTag="$nlink"
 	fi
@@ -155,10 +177,10 @@ function attTag() {
 
 	if [[ -d "$NTAGD"/"$nameTag" || -e "$NTAGD"/"$nameTag" ]]; then
 		echo "il tag esiste già, se non è il tag desiderato, cancellalo!"
-		return -1
+		return 255
 	fi
 
-	ln -sf "$ND" "$NTAGD"/"$nameTag" || return -1
+	ln -sf "$ND" "$NTAGD"/"$nameTag" || return 255
 
 	echo 'tag associato!, controlla la directory'
 
@@ -167,15 +189,96 @@ function attTag() {
 	
 }
 
+function listTag(){
+	echo -e "\n\033[4m$1\033[0m"
+	n=0
+	if [[ ! -d $2 ]] ;then 
+		return
+	fi
+	for i in "$2"/*; do 
+		echo -n "$(basename "$i") "
+		if (( n==3 )); then 
+			n=0
+			echo ""
+		fi;
+	done;
+	echo ""
+}
+
+function listTags(){
+	
+	debug=$1
+
+	shift 
+
+	percorso=""
+	ntag=""
+	nlink=""
+	np=0
+
+	if [[ $1 != "" ]]; then 
+		percorso=$1
+		np=$((np+1));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		ntag=$1
+		((np++));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		nlink=$1
+		((np++));
+	fi
+	shift
+
+	ntag=$percorso;
+
+	if (( debug==1 )); then 
+		echo "[DEBUG listTags] funzione listTags con parametri (n=$np):"
+		echo -e "[DEBUG listTags]\t\ttag=$ntag" 
+	fi
+
+	if (( np < 0 || 1 < np )); then 
+		echo "numero di parametri ($np) non validi!";
+		echo "il parametro -l (list) accetta 0 o 1 parametro"
+		usage 
+		return 255
+	fi
+
+	tagDir="$HOME/.tag"
+
+	if [[ ! -d $tagDir ]]; then 
+		echo "non c'e' nessuna cartella .tag"
+
+		return 255
+	fi
+
+	tagpath=$tagDir/$ntag;
+
+	if [[ ! -d "$tagpath" ]]; then 
+		echo "non c'e' nessun tag $ntag"
+
+		return 255
+	fi
+
+	if [[ "$ntag" == "" ]]; then 
+		listTag "I Tuoi Tag:" "$tagDir"
+	else
+		listTag "$ntag" "$tagpath"
+	fi;
+
+}
+
 # MAIN
 OIFS=$IFS
 IFS=$'\n'
 
 
-if (( $#<2 || 5<$# )); then 
+if (( $#<1 || 5<$# )); then 
 	echo "Numero parametri sbagliato"
 	usage
-	exit -1
+	exit 255
 fi
 
 debug=0
@@ -203,31 +306,31 @@ while (( $# > 0 )); do
 			if [[ $op != "" ]]; then
 				echo "non puoi effettuare due operazioni insieme!";
 				usage
-				exit -1;
+				exit 255;
 			fi
 			op="r";;
 		"-l"|"--list")
 			if [[ $op != "" ]]; then
 				echo "non puoi effettuare due operazioni insieme!";
 				usage
-				exit -1;
+				exit 255;
 			fi
 			op="l";;
 		"-n"|"--rename") 
 			if [[ $op != "" ]]; then
 				echo "non puoi effettuare due operazioni insieme!";
 				usage
-				exit -1;
+				exit 255;
 			fi
 			op="n";;
 		*)
 			if [[ $op == "" ]]; then
 				op="a"
 			fi
-			if (( $#<2 || 3<$# )); then
+			if (( $#<1 || 3<$# )); then
 				echo "le opzioni vanno specificate prima del percorso (numero parametri rimasti=$#)"
 				usage 
-				exit -1
+				exit 255
 			fi
 			percorso=$1
 			shift
@@ -255,15 +358,16 @@ fi
 
 uscita=0
 
-if (( $debug==1 )); then 
+if (( debug==1 )); then 
 		echo -e "============================="
 fi
 case $op in 
-	"a") attTag $debug $percorso $tagname $linkname;
+	"a") attTag $debug "$percorso" "$tagname" "$linkname";
 		uscita=$? ;
 	;;
 	"l")
-		echo "funzionalità ancora non gestita!";
+		# list si chiama solo con (al più) un parametro, che viene poi visto come nome tag
+		listTags $debug "$percorso" "$tagname" "$linkname";
 		uscita=$? ;
 	;;
 	"r")
@@ -279,7 +383,7 @@ case $op in
 		uscita=-1 ;
 	;;
 esac
-if (( $debug==1 )); then 
+if (( debug==1 )); then 
 		echo -e "============================="
 fi
 

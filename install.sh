@@ -15,17 +15,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
 
-echo "cd  $(dirname $0)"
-cd  $(dirname $0)
 
-echo "sudo cp -r TagSH /usr/share/TagSH "
-sudo cp -r . /usr/share/TagSH 
 
-echo "sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh "
-sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh 
+(
+	echo "cd  $(dirname "$0")"
+	cd "$(dirname "$0")" || exit
 
-echo "cleaning... remove"
+	echo "sudo cp -r TagSH /usr/share/TagSH "
+	sudo cp -r . /usr/share/TagSH 
 
-cd ..
+	echo "sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh "
+	sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh 
+
+	echo "cleaning... remove"
+)
+
 echo "rm -rf TagSH"
 rm -rf TagSH
