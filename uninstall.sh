@@ -16,45 +16,45 @@
 #    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
 
 echo "sudo rm /usr/bin/tagsh"
-sudo rm /usr/bin/tagsh 
-if (( $? != 0 )); then 
-	 echo "\nSomething wrong in unistalling process. Try manually following instruction on github."
-	 exit -1
+ 
+if ! sudo rm /usr/bin/tagsh; then 
+	 echo -e "\nSomething wrong in unistalling process. Try manually following instruction on github."
+	 exit 255
 fi
 
 echo "sudo rm -rf /usr/share/TagSH"
-sudo rm -rf /usr/share/TagSH
 
-if (( $? != 0 )); then 
-	 echo "\nSomething wrong in unistalling process. Try manually following instruction on github."
-	 exit -1
+
+if ! sudo rm -rf /usr/share/TagSH; then 
+	 echo -e "\nSomething wrong in unistalling process. Try manually following instruction on github."
+	 exit 255
 fi
 
 echo "rm -rf $HOME/.tag"
-rm -rf $HOME/.tag
 
-if (( $? != 0 )); then 
-	 echo "\nSomething wrong in unistalling process. Try manually following instruction on github."
-	 exit -1
+
+if ! rm -rf "$HOME"/.tag; then 
+	 echo -e  "\nSomething wrong in unistalling process. Try manually following instruction on github."
+	 exit 255
 fi
 
-## rimozione bookmark, se esiste
+#### rimozione bookmark, se esiste
 userplace=$HOME/.local/share/user-places.xbel
 
 if [[ -e $userplace ]]; then
-	nriga=$(cat -n $userplace | grep "\.tag" | xargs | cut -d ' ' -f1); 
-	if [[ nriga != "" ]]; then
+	nriga=$(cat -n "$userplace" | grep "\.tag" | xargs | cut -d ' ' -f1); 
+	if [[ $nriga != "" ]]; then
 		## le righe del bookmark sono 9
-		echo "cat $userplace | sed \"$nriga,$(($nriga+8))d\" > $userplace"
-		cat $userplace | sed "$nriga,$(($nriga+7))d" | tee  $userplace
+		echo "cat $userplace | sed \"$nriga,$((nriga+8))d\" > $userplace"
+		cat "$userplace" | sed "$nriga,$((nriga+7))d" | tee  "$userplace"
 	fi
 fi
 
-## rimozione bookmark gtk3, se esiste
+#### rimozione bookmark gtk3, se esiste
 bookmarks=$HOME/.config/gtk-3.0/bookmarks
 if [[ -e $bookmarks ]]; then
 	echo "cat $bookmarks | sed \"/TagSH/d\" > $bookmarks"
-	cat $bookmarks | sed "/TagSH/d" | tee $bookmarks
+	cat "$bookmarks" | sed "/TagSH/d" | tee "$bookmarks"
 fi
 
 echo "successfully uninstalled"
