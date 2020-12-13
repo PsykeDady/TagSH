@@ -78,7 +78,7 @@ EXAMPLES:
 `tagsh eclipse/java javacodes`
 - list all tag  
 `tagsh -l`
-- list all file under tag javacodes  
+- list all file under tag **javacodes**  
 `tagsh -l javacodes`
 
 ## TODO list for next versions:
