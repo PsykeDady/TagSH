@@ -76,9 +76,9 @@ EXAMPLES:
 `tagsh ~/workspace/java javacodes wjava`
 - link directory `eclipse/java` (relative path) with tag **javacodes** without rename it:  
 `tagsh eclipse/java javacodes`
-- list all tag
+- list all tag  
 `tagsh -l`
-- list all file under tag javacodes
+- list all file under tag javacodes  
 `tagsh -l javacodes`
 
 ## TODO list for next versions:
