@@ -4,7 +4,7 @@
 # 		TAG			#
 # -------------------------------------	#
 # Author  = PsykeDady			#
-# Version = 0.1		 		#
+# Version = 0.3		 		#
 # License = GPLv3	 		#
 # 					#
 # Read License at the end of script 	#
@@ -249,16 +249,23 @@ function listTags(){
 	tagDir="$HOME/.tag"
 
 	if [[ ! -d $tagDir ]]; then 
-		if (( debug == 1 )); then 
-			echo -e "[DEBUG listTags]\t\tnon c'e' nessuna cartella .tag"
-		fi
-		return 0
+		echo "non c'e' nessuna cartella .tag"
+
+		return 255
+	fi
+
+	tagpath=$tagDir/$ntag;
+
+	if [[ ! -d "$tagpath" ]]; then 
+		echo "non c'e' nessun tag $ntag"
+
+		return 255
 	fi
 
 	if [[ "$ntag" == "" ]]; then 
 		listTag "I Tuoi Tag:" "$tagDir"
 	else
-		listTag "$ntag" "$tagDir/$ntag"
+		listTag "$ntag" "$tagpath"
 	fi;
 
 }
