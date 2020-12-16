@@ -16,7 +16,7 @@ git clone https://github.com/PsykeDady/TagSH
 ./TagSH/test.sh
 ```
 
-Press `Y` to run script and enter to end it. If all test passed, you can install safety the script, otherwise open ad issue to dedicated issue session!
+Press `Y` to run script and enter to end it. If all test passed, you can install safety the script, otherwise open ad issue to dedicated section on Github project!
 
 ## install 
 ```bash
