@@ -1,7 +1,15 @@
-# TagSH (`ver 0.3`)
+# TagSH (`ver 0.6`)
 tag and categorize your directories, find them easily with your file manager or your shell
 
 Language of script messages is italian for now. Sorry international people 
+
+## test
+
+> <u>WARNING</u>
+> Test script is not ready! it can cause some bug to TagSH system. Be aware by now to install it
+
+Test script check if your system is compatible with tagsh ( and if project has some bugs...)
+It 
 
 ## install 
 ```bash

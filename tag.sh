@@ -4,7 +4,7 @@
 # 		TAG			#
 # -------------------------------------	#
 # Author  = PsykeDady			#
-# Version = 0.4		 		#
+# Version = 0.6		 		#
 # License = GPLv3	 		#
 # 					#
 # Read License at the end of script 	#
@@ -69,7 +69,11 @@ function addBookmark (){
 
 	NB=$(wc -l < "$Book")
 	NB=$(head -$((NB-1)) < "$Book" )
-	mv "$Book" "$Book".old
+
+	if [[ ! -e "$Book".old ]]; then 
+		mv "$Book" "$Book".old
+	fi;
+
 	echo "$NB
  <bookmark href=\"file://$HOME/.tag\">
   <title>TagSH</title>
@@ -94,7 +98,10 @@ function addBookmarkGTK (){
 		return 
 	fi
 
-	cp "$Book" "$Book".old
+	if [[ ! -e "$Book".old ]]; then 
+		cp "$Book" "$Book".old
+	fi;
+
 	echo "file://$HOME/.tag TagSH">>"$Book"
 	echo "bookmark GTK3 aggiunto"
 }
