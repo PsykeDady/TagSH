@@ -8,8 +8,15 @@ Language of script messages is italian for now. Sorry international people
 > <u>WARNING</u>
 > Test script is not ready! it can cause some bug to TagSH system. Be aware by now to install it
 
-Test script check if your system is compatible with tagsh ( and if project has some bugs...)
-It 
+Test script check if your system is compatible with tagsh ( and if project has some bugs...).
+
+After test, you need to **re-clone** project. Follow these istruction:
+```bash 
+git clone https://github.com/PsykeDady/TagSH
+./TagSH/test.sh
+```
+
+Press `Y` to run script and enter to end it. If all test passed, you can install safety the script, otherwise open ad issue to dedicated issue session!
 
 ## install 
 ```bash
