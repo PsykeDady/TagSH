@@ -58,6 +58,10 @@ OPTIONS:
 - `-d` or `--debug` 	: DEBUG MODE ON
 - `-l`			: list all tags
 - `-l tagname`		: list all file under specified tag
+- `-r nometag` remove tag and unlink all it's content
+- `-r nometag nomelink`  unlink an element from specified tag
+- `--remove`  alternative to -r.
+
 
 WHAT YOU CAN DO:  
 - you can use abs or rel paths
@@ -67,9 +71,8 @@ WHAT YOU CAN'T DO:
 - you can't tag with same tag two different directory with same name (but you can name it differently!) 
 
 OTHER TRICKS:  
-- to delete unwanted tag, you can go to directory `$HOME/.tag` and delete dir named with tag
-- to rename tag, move its directory
-- to delete association, go into directory `$HOME/.tag/tagname` and delete dir you want to unassociate
+- to rename tag, you can go to directory `$HOME/.tag` and rename its directory
+- to rename association, go into directory `$HOME/.tag/tagname` and rename file
 
 EXAMPLES:  
 - link directory `/home/yourname/workspace/java` with tag **javacodes** under *wjava* name:  
@@ -80,13 +83,18 @@ EXAMPLES:
 `tagsh -l`
 - list all file under tag **javacodes**  
 `tagsh -l javacodes`
+- remove tag javacode from eclipse/java element  
+`tagsh -r javacodes java`
+- remove tag javacodes and all it's association
+`tagsh -r `javacodes`
+
 
 ## TODO list for next versions:
 
-- command to delete an association
-- command to delete an entire tag
+- ~~command to delete an association~~
+- ~~command to delete an entire tag~~
 - command to rename a tag
-- command to name/rename an association (in order to permit different directory with same name)
+- command to rename an association 
 - ~~debug mode and silent mode (default)~~ 
 - implement language translations file ( ita, eng )
 - minimalist GUI and dolphin service with kdialog

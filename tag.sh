@@ -4,7 +4,7 @@
 # 		TAG			#
 # -------------------------------------	#
 # Author  = PsykeDady			#
-# Version = 0.3		 		#
+# Version = 0.4		 		#
 # License = GPLv3	 		#
 # 					#
 # Read License at the end of script 	#
@@ -17,27 +17,43 @@ function usage(){
 	echo -e  "\t$nome [opzioni] percorso nometag [nomeCollegamento]\n"
 	echo -e  "OPZIONI DISPONIBILI:"
 	echo -e  "\t-d oppure --debug\t per attivare la debug mode"
-	echo -e  "\t-l\t\t\t per fare la lista dei tag."
-	echo -e  "\t-l nometag\t\t per fare la lista degli elementi con quel tag\n"
+	echo -e  "\t-l oppure --list\t per fare la lista dei tag."
+	echo -e  "\t-l nometag\t\t per fare la lista degli elementi con quel tag."
+	echo -e  "\t-r nometag\t\t per rimuovere un tag e disassociare tutti i suoi elementi."
+	echo -e  "\t-r nometag nomelink\t per disassociare un elemento sotto un tag."
+	echo -e  "\t--remove\t\t alternativa a -r.\n"
 	echo -e  "COSA PUOI FARE:"
 	echo -e  "\t- usare sia path assoluti che relativi\n"
 	echo -e  "COSA NON PUOI FARE:"
 	echo -e  "\t- usare caratteri nel tag o nel collegamento che non siano lettere o numeri"
-	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome (specificando un nome collegamento però, puoi cambiare il nome)\n"
+	echo -e  "\t- usare lo stesso tag per due cartelle con lo stesso nome (specificando un nome collegamento però, puoi collegarlo con diverso nome)\n"
 	echo -e  "ALTRO DA SAPERE:"
-	echo -e  "\t- attualmente per cancellare un tag devi andare nella cartella $HOME/.tag ed eliminare la cartella che porta il suo nome"
-	echo -e  "\t- per rinominarlo, rinomina la cartella"
-	echo -e  "\t- per cancellare un associazione basta cancellare la cartella che si trova $HOME/.tag/nometag\n"
+	echo -e  "\t- attualmente per rinominare un tag devi andare nella cartella $HOME/.tag e rinominare la cartella che porta il suo nome"
+	echo -e  "\t- per rinominare un associazione basta rinominare la cartella che si trova $HOME/.tag/nometag\n"
 	echo -e  "ESEMPI D'USO:"
 	echo -e  "\tAssociare la cartella $HOME/workspace/java sotto il tag javacodes sotto il nome di wjava:"
-	echo -e  "\t\ttagsh ~/workspace/java javacodes wjava\n"
+	echo -e  "\t\t$nome ~/workspace/java javacodes wjava\n"
 	echo -e  "\tAssociare la cartella eclipse/java (path relativo) sotto il tag javacodes senza rinominarlo:"
-	echo -e  "\t\ttagsh eclipse/java javacodes\n"
+	echo -e  "\t\t$nome eclipse/java javacodes\n"
 	echo -e  "\tfare la lista dei tag"
-	echo -e  "\t\ttagsh -l\n"
+	echo -e  "\t\t$nome -l\n"
 	echo -e  "\tfare la lista degli elementi sotto il tag javacodes"
-	echo -e  "\t\ttagsh -l javacodes\n\n"
+	echo -e  "\t\t$nome -l javacodes\n"
+	echo -e  "\trimuovere associazione di eclipse/java da javacodes"
+	echo -e  "\t\t$nome -r javacodes java\n"
+	echo -e  "\trimuovere javacodes e tutte le associazioni ad esso"
+	echo -e  "\t\t$nome -r javacodes\n\n"
 	echo -e  "Per i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
+}
+
+# Utility
+
+function regexNome(){
+	if [[ ! $1 =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
+		echo "al momento $2 può contenere solo lettere e numeri!"
+		usage
+		return 255
+	fi
 }
 
 function addBookmark (){
@@ -46,13 +62,13 @@ function addBookmark (){
 		echo "file user-places non presente"
 		return
 	fi 
-	if [[ $(cat "$Book"|grep "\.tag") ]]; then
+	if  grep  -q  "\.tag" "$Book" ; then
 		echo "bookmark presente"
 		return 
 	fi
 
-	NB=$(cat "$Book" | wc -l)
-	NB=$(cat "$Book" | head -$((NB-1)))
+	NB=$(wc -l < "$Book")
+	NB=$(head -$((NB-1)) < "$Book" )
 	mv "$Book" "$Book".old
 	echo "$NB
  <bookmark href=\"file://$HOME/.tag\">
@@ -73,7 +89,7 @@ function addBookmarkGTK (){
 		return
 	fi
 	Book=$HOME/.config/gtk-3.0/bookmarks
-	if [[ $(cat "$Book"|grep "\.tag") ]]; then
+	if  grep  -q  "\.tag" "$Book" ; then
 		echo "bookmark GTK3 presente"
 		return 
 	fi
@@ -83,6 +99,24 @@ function addBookmarkGTK (){
 	echo "bookmark GTK3 aggiunto"
 }
 
+function listTag(){
+	echo -e "\n\033[4m$1\033[0m"
+	n=0
+	if [[ ! -d $2 ]] ;then 
+		return
+	fi
+	for i in "$2"/*; do 
+		echo -n "\"$(basename "$i")\" "
+		if (( n==3 )); then 
+			n=0
+			echo ""
+		fi;
+	done;
+	echo ""
+}
+
+
+# Funzioni principali
 
 function attTag() {
 
@@ -121,15 +155,12 @@ function attTag() {
 		echo -e "[DEBUG attTag]\t\ttag=$ntag" 
 		echo -e "[DEBUG attTag]\t\tnome link=$nlink" 
 	fi
-	if [[ ! $ntag =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
-		echo "al momento il tag può contenere solo lettere e numeri!"
-		usage
+
+	if ! regexNome "$ntag" "il tag" ; then
 		return 255
 	fi
 
-	if [[ $nlink != "" ]] && [[ ! $nlink =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
-		echo "al momento il nome del link può contenere solo lettere e numeri!"
-		usage
+	if [[ $nlink != "" ]] && ! regexNome "$nlink" "il nome del link"; then
 		return 255
 	fi
 
@@ -195,22 +226,6 @@ function attTag() {
 	
 }
 
-function listTag(){
-	echo -e "\n\033[4m$1\033[0m"
-	n=0
-	if [[ ! -d $2 ]] ;then 
-		return
-	fi
-	for i in "$2"/*; do 
-		echo -n "$(basename "$i") "
-		if (( n==3 )); then 
-			n=0
-			echo ""
-		fi;
-	done;
-	echo ""
-}
-
 function listTags(){
 	
 	debug=$1
@@ -252,6 +267,10 @@ function listTags(){
 		return 255
 	fi
 
+	if [[ $ntag != "" ]] && ! regexNome "$ntag" "il nome tag"; then
+		return 255;
+	fi; 
+
 	tagDir="$HOME/.tag"
 
 	if [[ ! -d $tagDir ]]; then 
@@ -275,6 +294,99 @@ function listTags(){
 	fi;
 
 }
+
+
+function removeTag(){
+	debug=$1
+
+	shift 
+
+	#tagsh -r tagname
+	#tagsh -r tagname elementname
+
+	percorso=""
+	ntag=""
+	nlink=""
+	np=0
+
+	if [[ $1 != "" ]]; then 
+		percorso=$1
+		np=$((np+1));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		ntag=$1
+		((np++));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		nlink=$1
+		((np++));
+	fi
+	shift
+	
+	nlink=$ntag
+	ntag=$percorso
+
+	if (( debug==1 )); then 
+		echo "[DEBUG removeTag] funzione listTags con parametri (n=$np):"
+		echo -e "[DEBUG removeTag]\t\ttag=$ntag" 
+		echo -e "[DEBUG removeTag]\t\tlink=$nlink" 
+	fi
+
+	if (( np< 1 || np>2 )); then 
+		echo "numero di parametri ($np) non validi!";
+		echo "il parametro -r (remove) accetta 1 o 2 parametri"
+		usage 
+		return 255
+	fi
+
+	if ! regexNome "$ntag" "il nome tag"; then
+		return 255;
+	fi; 
+
+	## FIXME TODO XXX
+	if [[ "$nlink" != "" ]] && [[ "$nlink" =~ ^(\.|\.\.)(\/.*)?$ ]]; then
+		echo "non utilizzare caratteri di sistema nel nome link!"
+		usage
+		return 255
+	fi; 
+
+	tagDir="$HOME/.tag";
+
+	if [[ ! -d $tagDir ]]; then 
+		echo "non c'e' nessuna cartella .tag"
+
+		return 255
+	fi
+
+	tagpath=$tagDir/$ntag;
+
+	if [[ ! -d "$tagpath" ]]; then 
+		echo "non c'e' nessun tag $ntag"
+
+		return 255
+	fi
+
+	removePath=$tagpath
+	
+	if [[ $nlink != "" ]]; then
+		removePath=$removePath/$nlink
+
+		if [[ ! -e $removePath ]]; then 
+			echo "$nlink non è un file o cartella con tag $ntag" 
+
+			return 255
+		fi
+
+	fi;
+
+	rm  -rf "$removePath"
+	return 0
+	
+}
+
+
 
 # MAIN
 OIFS=$IFS
@@ -377,7 +489,7 @@ case $op in
 		uscita=$? ;
 	;;
 	"r")
-		echo "funzionalità ancora non gestita!";
+		removeTag $debug "$percorso" "$tagname" "$linkname";
 		uscita=$? ;
 	;;
 	"n")

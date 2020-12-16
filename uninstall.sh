@@ -45,7 +45,7 @@ if [[ -e $userplace ]]; then
 	nriga=$(cat -n "$userplace" | grep "\.tag" | xargs | cut -d ' ' -f1); 
 	if [[ $nriga != "" ]]; then
 		## le righe del bookmark sono 9
-		echo "cat $userplace | sed \"$nriga,$((nriga+8))d\" > $userplace"
+		echo "cat $userplace | sed \"$nriga,$((nriga+7))d\" > $userplace"
 		cat "$userplace" | sed "$nriga,$((nriga+7))d" | tee  "$userplace"
 	fi
 fi
