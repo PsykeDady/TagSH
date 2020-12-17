@@ -59,11 +59,117 @@ function testAdd(){
 	echo -n "tag/tag1 ... "
 	[[ ! -e $tagDir/tag/tag2 ]] && echo "associazione assente! uscita..." && return 255
 	echo -e "controllo passato \u2713\n"
+	
+	return 0
 }
+
+function testBook () {
+	Book="$HOME"/.local/share/user-places.xbel
+	BookGtk="$HOME"/.config/gtk-3.0/bookmarks
+
+	if [[ -e $Book ]]; then 
+		echo -n "controllo bookmark user-places ... " 
+		snippet="<bookmark href=\"file://$HOME/.tag\">"
+
+		if ! grep -q "$snippet" "$Book"; then 
+			echo "il bookmark globale esiste, ma non c'è riferimento a tag"
+			return 255
+		fi
+	fi
+	echo -e "controllo passato \u2713\n"
+
+	if [[ -e $BookGtk ]]; then 
+		echo -n "controllo bookmark gtk ... "
+		snippet="file://$HOME/.tag TagSH"
+
+		if ! grep -q "$snippet" "$BookGtk"; then 
+			echo "il bookmark gtk esiste, ma non c'è riferimento a tag"
+			return 255
+		fi
+	fi
+
+	echo -e "controllo passato \u2713\n"
+
+	return 0
+}
+
+function testList(){
+	echo -n "controllo tagsh -l ..."
+	tutti=$(tagsh -l | tail -1)
+
+	echo -n " documenti ..."
+	doct=$(echo "$tutti" | cut -d" " -f1);
+	[[ $doct == '"documenti"' ]] || { echo "un tag previsto (documenti) non è stato trovato"; return 255; } 
+
+	echo -n " tag ..."
+	tagt=$(echo "$tutti" | cut -d" " -f2);
+	[[ $tagt == '"tag"' ]] || { echo "un tag previsto (tag) non è stato trovato"; return 255; }
+
+	echo -n " test ..."
+	testt=$(echo "$tutti" | cut -d" " -f3);
+	[[ $testt == '"test"' ]] || { echo "un tag previsto (test) non è stato trovato"; return 255; }
+
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -l test ... "
+	content=$(tagsh -l "test" | tail -1)
+	el=$(echo "$content" | cut -d" " -f1);
+	echo -n "t.dir ... "
+	[[ $el == "t.dir" ]] || { echo "l'elemento t.dir sotto il tag test non è stato trovato"; exit 255; }
+	echo -n "test.file ... "
+	el=$(echo "$content" | cut -d" " -f2);
+	[[ $el == "test.file" ]] || { echo "l'elemento test.file sotto il tag test non è stato trovato"; exit 255; }
+
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -l documenti ... "
+	content=$(tagsh -l "documenti" | tail -1)
+	el=$(echo "$content" | cut -d" " -f1);
+	echo -n "documenti.importanti ... "
+	[[ $el == "documenti.importanti" ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; exit 255; }
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -l tag ... "
+	content=$(tagsh -l "tag" | tail -1)
+	echo -n "t12 ... "
+	el=$(echo "$content" | cut -d" " -f1);
+	[[ $el == "t12" ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; exit 255; }
+	echo -n "tag2 ... "
+	el=$(echo "$content" | cut -d" " -f2);
+	[[ $el == "tag2" ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; exit 255; }
+
+}
+
+function testRemove() {
+	echo "controllo tagsh -r test ... "	
+	tagsh -r test || { echo "il comando di rimozione non è riuscito"; return 255; }
+
+	[[ -e $tagDir/test ]] && { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
+
+	echo -e "controllo passato \u2713\n"
+
+	echo "controllo tagsh -r tag t12 ..."	
+	tagsh -r tag t12 || { echo "il comando di rimozione non è riuscito"; return 255; }
+
+	[[ -e $tagDir/tag/t12 ]] && { echo "qualcosa è andato storto, il'associazione di t12 al tag tag doveva essere eliminata ma così non è"; return 255; }
+
+	echo -e "controllo passato \u2713\n"
+
+}
+
+function testUninstall () {
+	echo " test /usr/share/TagSH/uninstall.sh"
+	/usr/share/TagSH/uninstall.sh || echo "script di disinstallazione non riuscito...";
+
+	echo -e "con" TODO
+
+}
+
 
 ## avvia i test su tag.sh
 
 echo "Il test effettuerà le seguenti operazioni:"
+echo -e "\t- nuovo clone del repo"
 echo -e "\t- installazione software"
 echo -e "\t\t- comporta eliminazione della cartella di download del repo"
 echo -e "\t- aggiunta di alcuni tag"
@@ -86,30 +192,30 @@ if [[ $confirm != "y" ]] && [[ $confirm != "Y" ]]; then
 	exit 0
 fi
 
-nomedir=$(dirname "$0")
+nomedir="$PWD"/TagSH.test
 
 
-case $nomedir in
-	/* )  
-		echo "lo script è stato chiamato con percorso assoluto, nessuna modifica";;
-	 * ) 
-	 	echo "lo script è stato chiamato con percorso relativo $nomedir. inclusione percorso assoluto:"
-	 	nomedir=$PWD/$nomedir 
-		echo "nuovo percorso :> $nomedir"
-	;;
-esac
 echo -e "\n"
 
-
-if [[ "$nomedir" == "$(pwd)"/. ]]; then 
-	echo -e "sei in una cartella che verrà eliminata, spostato alla cartella padre\n"
-	cd ..
+if [[ -e "$nomedir" ]]; then 
+	rm -rf "$nomedir"
 fi
+
+echo "Vuoi testare il branch di sviluppo? [s/N]"
+read -r confirm
+opzioni=""
+
+if [[ $confirm == "S" || $confirm == "s" ]]; then
+	opzioni="--branch=novita"
+fi;
+
+
+git clone https://www.github.com/PsykeDady/TagSH "$nomedir" $opzioni
 
 echo "invoco procedura di installazione..."
 
 echo "\"$nomedir\"/install.sh"
-# "$nomedir"/install.sh
+"$nomedir"/install.sh || { echo "script di installazione non riuscito..." ; return 255; }
 echo -e "\n\n"
 
 
@@ -140,15 +246,20 @@ mkdir -p test.dir tag1
 echo -e 'touch test.file documenti.importanti tag2 tag1/tag12\n'
 touch test.file documenti.importanti tag2 tag1/tag12 
 
-testAdd
+echo "test add"
+testAdd || exit 255
 
-testBook
+echo -e "\ntest book"
+testBook || exit 255
 
-#testList
+echo -e "\ntest list"
+testList || exit 255
 
-#testRemove
+echo -e "\ntest remove"
+testRemove || exit 255
 
-#testUninstall
+echo -e "\ntest uninstall"
+testUninstall || exit 255
 
 echo -e "\npremere invio per terminare i test (e pulire la cartella)"
 read -r;

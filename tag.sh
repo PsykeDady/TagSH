@@ -107,7 +107,7 @@ function addBookmarkGTK (){
 }
 
 function listTag(){
-	echo -e "\n\033[4m$1\033[0m"
+	echo -e "\033[4m$1\033[0m"
 	n=0
 	if [[ ! -d $2 ]] ;then 
 		return
