@@ -137,11 +137,12 @@ function testList(){
 	echo -n "tag2 ... "
 	el=$(echo "$content" | cut -d" " -f2);
 	[[ $el == '"tag2"' ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
+	echo -e "controllo passato \u2713\n"
 
 }
 
 function testRemove() {
-	echo "controllo tagsh -r test ... "	
+	echo -e "\ncontrollo tagsh -r test ... "	
 	tagsh -r test || { echo "il comando di rimozione non è riuscito"; return 255; }
 
 	[[ -e $tagDir/test ]] && { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
@@ -161,8 +162,9 @@ function testUninstall () {
 
 	stato=0
 
-	echo " test /usr/share/TagSH/uninstall.sh"
-	/usr/share/TagSH/uninstall.sh || echo "script di disinstallazione non riuscito...";
+	echo -n "test /usr/share/TagSH/uninstall.sh ... "
+	/usr/share/TagSH/uninstall.sh > /dev/null || echo "script di disinstallazione non riuscito...";
+	echo -e "controllo passato \u2713\n"
 
 	echo -n "controllo cartella .tag ... " 
 
@@ -170,7 +172,7 @@ function testUninstall () {
 
 	echo -e "controllo passato \u2713\n"
 	
-	echo -n "controllo dei bookmark user-places..."
+	echo -n "controllo del bookmark user-places... "
 
 	USERPLACES="$HOME"/.local/share/user-places.xbel
 
@@ -183,6 +185,11 @@ function testUninstall () {
 		}
 	fi
 
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo del bookmark gtk... "
+
+
 	BOOKMARKS="$HOME"/.config/gtk-3.0/bookmarks
 
 	if [[ -e $BOOKMARKS ]]; then 
@@ -193,6 +200,8 @@ function testUninstall () {
 			stato=1
 		}
 	fi
+
+	echo -e "controllo passato \u2713\n"
 
 	(( stato==1 )) && return 255 || return 0
 }
@@ -297,3 +306,17 @@ echo -e "\npremere invio per terminare i test (e pulire la cartella)"
 read -r;
 
 pulizer
+
+echo "vuoi installare tag (non verrà eliminata però la cartella da cui è eseguito il test) ? [S/n]"
+
+read -r confirm
+
+if [[ "$confirm" != "N" && "$confirm" != "n" ]]; then 
+	"$(dirname "$0")"/install.sh
+	
+	git clone https://www.github.com/PsykeDady/TagSH "$nomedir" $opzioni
+
+	echo "\"$nomedir\"/install.sh"
+	
+	"$nomedir"/install.sh || { echo "script di installazione non riuscito..." ; return 255; }
+fi
