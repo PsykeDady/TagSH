@@ -30,5 +30,5 @@
 	echo "cleaning... remove"
 )
 
-echo "rm -rf TagSH"
-rm -rf TagSH
+echo "rm -rf $(dirname "$0")"
+rm -rf "$(dirname "$0")"
