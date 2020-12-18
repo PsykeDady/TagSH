@@ -114,11 +114,11 @@ function testList(){
 	echo -n "controllo tagsh -l test ... "
 	content=$(tagsh -l "test" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
-	echo -n "t.dir ... "
-	[[ $el == "tdir" ]] || { echo "l'elemento t.dir sotto il tag test non è stato trovato"; return 255; }
+	echo -n "tdir ... "
+	[[ $el == '"tdir"' ]] || { echo "l'elemento tdir sotto il tag test non è stato trovato"; return 255; }
 	echo -n "test.file ... "
 	el=$(echo "$content" | cut -d" " -f2);
-	[[ $el == "test.file" ]] || { echo "l'elemento test.file sotto il tag test non è stato trovato"; return 255; }
+	[[ $el == '"test.file"' ]] || { echo "l'elemento test.file sotto il tag test non è stato trovato"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
 
@@ -126,17 +126,17 @@ function testList(){
 	content=$(tagsh -l "documenti" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
 	echo -n "documenti.importanti ... "
-	[[ $el == "documenti.importanti" ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; return 255; }
+	[[ $el == '"documenti.importanti"' ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; return 255; }
 	echo -e "controllo passato \u2713\n"
 
 	echo -n "controllo tagsh -l tag ... "
 	content=$(tagsh -l "tag" | tail -1)
 	echo -n "t12 ... "
 	el=$(echo "$content" | cut -d" " -f1);
-	[[ $el == "t12" ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; return 255; }
+	[[ $el == '"t12"' ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; return 255; }
 	echo -n "tag2 ... "
 	el=$(echo "$content" | cut -d" " -f2);
-	[[ $el == "tag2" ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
+	[[ $el == '"tag2"' ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
 
 }
 
@@ -216,10 +216,10 @@ echo "SE QUALUNQUE COSA DOVESSE ANDAR MALE, NON INSTALLATE IL SOFTWARE E CONTATT
 echo "Sviluppo a cura di PsykeDady, per aggiornamenti, issue e pull request andare su https://www.github.com/PsykeDady/TagSH"
 echo -e "\n\n";
 
-echo "File dei test in via di sviluppo. Procedere con i test? [y/N]"
+echo "File dei test in via di sviluppo. Procedere con i test? [s/N]"
 read -r confirm
 
-if [[ $confirm != "y" ]] && [[ $confirm != "Y" ]]; then 
+if [[ $confirm != "s" ]] && [[ $confirm != "S" ]]; then 
 	echo "uscita..."
 	exit 0
 fi

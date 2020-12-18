@@ -41,7 +41,7 @@ fi
 #### rimozione bookmark, se esiste
 userplace=$HOME/.local/share/user-places.xbel
 
-if [[ -e $userplace ]]; then
+if [[ -e $userplace ]] && grep -q "/.tag" "$userplace" ; then
 	nriga=$(cat -n "$userplace" | grep "\.tag" | xargs | cut -d ' ' -f1); 
 	if [[ $nriga != "" ]]; then
 		## le righe del bookmark sono 9
@@ -52,7 +52,7 @@ fi
 
 #### rimozione bookmark gtk3, se esiste
 bookmarks=$HOME/.config/gtk-3.0/bookmarks
-if [[ -e $bookmarks ]]; then
+if [[ -e $bookmarks ]]  && grep -q "/.tag" "$bookmarks" ; then
 	echo "cat $bookmarks | sed \"/TagSH/d\" > $bookmarks"
 	cat "$bookmarks" | sed "/TagSH/d" | tee "$bookmarks"
 fi
