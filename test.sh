@@ -279,19 +279,19 @@ echo -e 'touch test.file documenti.importanti tag2 tag1/tag12\n'
 touch test.file documenti.importanti tag2 tag1/tag12 
 
 echo "test add"
-testAdd || exit 255
+testAdd || { pulizer; exit 255; }
 
 echo -e "\ntest book"
-testBook || exit 255
+testBook || { pulizer; exit 255; }
 
 echo -e "\ntest list"
-testList || exit 255
+testList || { pulizer; exit 255; }
 
 echo -e "\ntest remove"
-testRemove || exit 255
+testRemove || { pulizer; exit 255; }
 
 echo -e "\ntest uninstall"
-testUninstall || { echo "disistallazione andata male... "; exit 255; }
+testUninstall || { echo "disistallazione andata male... "; pulizer; exit 255; }
 
 echo -e "\npremere invio per terminare i test (e pulire la cartella)"
 read -r;
