@@ -158,11 +158,43 @@ function testRemove() {
 }
 
 function testUninstall () {
+
+	stato=0
+
 	echo " test /usr/share/TagSH/uninstall.sh"
 	/usr/share/TagSH/uninstall.sh || echo "script di disinstallazione non riuscito...";
 
-	echo -e "con" TODO
+	echo -n "controllo cartella .tag ... " 
 
+	[[ -e $HOME/.tag ]] && { echo "la cartella tag esiste ancora, qualcosa è andato male"; return 255; }
+
+	echo -e "controllo passato \u2713\n"
+	
+	echo -n "controllo dei bookmark user-places..."
+
+	USERPLACES="$HOME"/.local/share/user-places.xbel
+
+	if [[ -e $USERPLACES ]]; then 
+		diff "$USERPLACES" "$USERPLACES".old  > /dev/null || { 
+			echo "non sono riuscito a ripristinare il tuo $USERPLACES"; 
+			echo "ripristino backup..."
+			mv "$USERPLACES".old "$USERPLACES"
+			stato=1
+		}
+	fi
+
+	BOOKMARKS="$HOME"/.config/gtk-3.0/bookmarks
+
+	if [[ -e $BOOKMARKS ]]; then 
+		diff "$BOOKMARKS" "$BOOKMARKS".old  > /dev/null || { 
+			echo "non sono riuscito a ripristinare il tuo $BOOKMARKS"; 
+			echo "ripristino backup..."
+			mv "$BOOKMARKS".old "$BOOKMARKS"
+			stato=1
+		}
+	fi
+
+	(( stato==1 )) && return 255 || return 0
 }
 
 
@@ -259,7 +291,7 @@ echo -e "\ntest remove"
 testRemove || exit 255
 
 echo -e "\ntest uninstall"
-testUninstall || exit 255
+testUninstall || { echo "disistallazione andata male... "; exit 255; }
 
 echo -e "\npremere invio per terminare i test (e pulire la cartella)"
 read -r;
