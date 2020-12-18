@@ -115,10 +115,10 @@ function testList(){
 	content=$(tagsh -l "test" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
 	echo -n "t.dir ... "
-	[[ $el == "t.dir" ]] || { echo "l'elemento t.dir sotto il tag test non è stato trovato"; exit 255; }
+	[[ $el == "tdir" ]] || { echo "l'elemento t.dir sotto il tag test non è stato trovato"; return 255; }
 	echo -n "test.file ... "
 	el=$(echo "$content" | cut -d" " -f2);
-	[[ $el == "test.file" ]] || { echo "l'elemento test.file sotto il tag test non è stato trovato"; exit 255; }
+	[[ $el == "test.file" ]] || { echo "l'elemento test.file sotto il tag test non è stato trovato"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
 
@@ -126,17 +126,17 @@ function testList(){
 	content=$(tagsh -l "documenti" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
 	echo -n "documenti.importanti ... "
-	[[ $el == "documenti.importanti" ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; exit 255; }
+	[[ $el == "documenti.importanti" ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; return 255; }
 	echo -e "controllo passato \u2713\n"
 
 	echo -n "controllo tagsh -l tag ... "
 	content=$(tagsh -l "tag" | tail -1)
 	echo -n "t12 ... "
 	el=$(echo "$content" | cut -d" " -f1);
-	[[ $el == "t12" ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; exit 255; }
+	[[ $el == "t12" ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; return 255; }
 	echo -n "tag2 ... "
 	el=$(echo "$content" | cut -d" " -f2);
-	[[ $el == "tag2" ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; exit 255; }
+	[[ $el == "tag2" ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
 
 }
 
@@ -260,7 +260,7 @@ echo "aggiunta della seguente struttura di tag:"
 echo -e "_______________________	"
 echo -e "|.tag						"
 echo -e "|- test					"
-echo -e "|-|- test.dir -> t.dir		"
+echo -e "|-|- test.dir -> tdir		"
 echo -e "|-|- test.file				"
 echo -e "|							"
 echo -e "|- documenti				"
