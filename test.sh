@@ -26,14 +26,33 @@ function pulizer(){
 }
 
 function testAdd(){
+	#errori
+	echo -e "tagsh test.dir test t.dir"
+	tagsh test.dir test 't.dir' > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "Tag in errore (controllo passato) \u2713\n"
+
+	echo -e "tagsh test.dir te!st tdir"
+	tagsh test.dir te\!st tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "Tag in errore (controllo passato) \u2713\n"
+
+	echo -e "tagsh test.dir/ciao test tdir"
+	tagsh test.dir/ciao test tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "Tag in errore (controllo passato) \u2713\n"
+
+	#add  con nome 
 	echo -e "tagsh test.dir test tdir"
 	tagsh test.dir test tdir || { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
-	echo -e "\ntagsh $(pwd)/test.file test"
-	tagsh "$(pwd)"/test.file test ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
-	echo -e "\ntagsh documenti.importanti documenti"
-	tagsh documenti.importanti documenti ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+
 	echo -e "\ntagsh tag1 tag t12"
 	tagsh tag1 tag t12 ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+
+	# add senza nome
+	echo -e "\ntagsh $(pwd)/test.file test"
+	tagsh "$(pwd)"/test.file test ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+
+	echo -e "\ntagsh documenti.importanti documenti"
+	tagsh documenti.importanti documenti ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+
 	echo -e "\ntagsh tag2 tag"
 	tagsh tag2 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
@@ -47,14 +66,14 @@ function testAdd(){
 	echo -n "tag/tdir ... "
 	[[ ! -e $tagDir/test/tdir ]] && echo "associazione assente! uscita..." && return 255
 	echo -e "controllo passato \u2713\n"
+	echo -n "tag/t12 ... "
+	[[ ! -e $tagDir/tag/t12 ]] && echo "associazione assente! uscita..." && return 255
+	echo -e "controllo passato \u2713\n"
 	echo -n "test/test.file ... "
 	[[ ! -e $tagDir/test/test.file ]] && echo "associazione assente! uscita..." && return 255
 	echo -e "controllo passato \u2713\n"
 	echo -n "documenti/documenti.importanti ... "
 	[[ ! -e $tagDir/documenti/documenti.importanti ]] && echo "associazione assente! uscita..." && return 255
-	echo -e "controllo passato \u2713\n"
-	echo -n "tag/t12 ... "
-	[[ ! -e $tagDir/tag/t12 ]] && echo "associazione assente! uscita..." && return 255
 	echo -e "controllo passato \u2713\n"
 	echo -n "tag/tag1 ... "
 	[[ ! -e $tagDir/tag/tag2 ]] && echo "associazione assente! uscita..." && return 255
@@ -94,6 +113,7 @@ function testBook () {
 }
 
 function testList(){
+	# solo opzione
 	echo -n "controllo tagsh -l ..."
 	tutti=$(tagsh -l | tail -1)
 
@@ -111,6 +131,16 @@ function testList(){
 
 	echo -e "controllo passato \u2713\n"
 
+	#errori
+	echo -n "controllo tagsh -l .. ... "
+	tagsh -l .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "list in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -l c!iao! ... "
+	tagsh -l 'c!iao!' > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "list in errore (controllo passato) \u2713\n"
+
+	# opzione + parametro
 	echo -n "controllo tagsh -l test ... "
 	content=$(tagsh -l "test" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
@@ -138,10 +168,37 @@ function testList(){
 	el=$(echo "$content" | cut -d" " -f2);
 	[[ $el == '"tag2"' ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
 	echo -e "controllo passato \u2713\n"
-
 }
 
 function testRemove() {
+	#controllo errori
+	echo -n "controllo tagsh -r .. ... "
+	tagsh -r .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -r  test ../documenti  ... "
+	tagsh -r test ../documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -r testa  ... "
+	tagsh -r testa > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -r test documenti  ... "
+	tagsh -r test documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagsh -r test $(PWD)/documenti  ... "
+	tagsh -r test "$(PWD)"/documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	# comandi di rimozione
+	## tag intero
 	echo -e "\ncontrollo tagsh -r test ... "	
 	tagsh -r test || { echo "il comando di rimozione non è riuscito"; return 255; }
 
@@ -149,13 +206,13 @@ function testRemove() {
 
 	echo -e "controllo passato \u2713\n"
 
+	## associazione sotto tag
 	echo "controllo tagsh -r tag t12 ..."	
 	tagsh -r tag t12 || { echo "il comando di rimozione non è riuscito"; return 255; }
 
 	[[ -e $tagDir/tag/t12 ]] && { echo "qualcosa è andato storto, il'associazione di t12 al tag tag doveva essere eliminata ma così non è"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
-
 }
 
 function testUninstall () {
@@ -317,6 +374,6 @@ if [[ "$confirm" != "N" && "$confirm" != "n" ]]; then
 	git clone https://www.github.com/PsykeDady/TagSH "$nomedir" $opzioni
 
 	echo "\"$nomedir\"/install.sh"
-	
+
 	"$nomedir"/install.sh || { echo "script di installazione non riuscito..." ; return 255; }
 fi
