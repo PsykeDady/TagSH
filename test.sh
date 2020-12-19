@@ -192,8 +192,8 @@ function testRemove() {
 	echo -e "remove in errore (controllo passato) \u2713\n"
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo tagsh -r test $(PWD)/documenti  ... "
-	tagsh -r test "$(PWD)"/documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagsh -r test $(pwd)/documenti  ... "
+	tagsh -r test "$(pwd)"/documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
 	echo -e "controllo passato \u2713\n"
 
@@ -308,7 +308,7 @@ if [[ $confirm == "S" || $confirm == "s" ]]; then
 fi;
 
 
-git clone https://www.github.com/PsykeDady/TagSH "$nomedir" $opzioni
+git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
 
 echo "invoco procedura di installazione..."
 
@@ -364,16 +364,39 @@ read -r;
 
 pulizer
 
-echo "vuoi installare tag (non verrà eliminata però la cartella da cui è eseguito il test) ? [S/n]"
+echo "vuoi installare tag? [S/n]"
 
 read -r confirm
 
 if [[ "$confirm" != "N" && "$confirm" != "n" ]]; then 
-	"$(dirname "$0")"/install.sh
-	
-	git clone https://www.github.com/PsykeDady/TagSH "$nomedir" $opzioni
+	git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
 
 	echo "\"$nomedir\"/install.sh"
 
 	"$nomedir"/install.sh || { echo "script di installazione non riuscito..." ; return 255; }
+fi
+
+echo -e "\ncancellare cartella di test? [s/N]"
+
+read -r confirm
+
+if [[ "$confirm" == "S" || "$confirm" == "s" ]]; then 
+	testdir="$(dirname "$0")";
+
+	case $testdir in
+		/*) 
+			echo "percorso già assoluto per tag"
+			;;
+		 *) 
+		 	echo "percorso non assoluto per tag, modifica"
+			testdir=$(pwd)/$testdir;
+		;;
+	esac;
+
+	if [[ "$PWD/." -ef "$testdir" ]]; then
+		echo "sei nella cartella da eliminare... spostiamoci"
+		cd ..
+	fi;
+	echo rm -rf "$testdir"
+	rm -rf "$testdir"
 fi
