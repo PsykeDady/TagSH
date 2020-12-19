@@ -99,8 +99,8 @@ EXAMPLES:
 `tagsh -l javacodes`
 - remove tag javacode from eclipse/java element  
 `tagsh -r javacodes java`
-- remove tag javacodes and all it's association
-`tagsh -r `javacodes`
+- remove tag javacodes and all it's association  
+`tagsh -r javacodes`
 
 
 ## TODO list for next versions:
