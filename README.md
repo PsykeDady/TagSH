@@ -5,18 +5,17 @@ Language of script messages is italian for now. Sorry international people
 
 ## test
 
-> <u>WARNING</u>
-> Test script is not ready! it can cause some bug to TagSH system. Be aware by now to install it
-
 Test script check if your system is compatible with tagsh ( and if project has some bugs...).
 
-After test, you need to **re-clone** project. Follow these istruction:
+After test, will be prompted if you want to install the selected version of tag (be aware to install "*sviluppo branch*" version, sviluppo mean **development branch**). Follow these istruction:
 ```bash 
 git clone https://github.com/PsykeDady/TagSH
 ./TagSH/test.sh
 ```
 
-Press `Y` to run script and enter to end it. If all test passed, you can install safety the script, otherwise open ad issue to dedicated section on Github project!
+Press `S` to run script and `N` at **Vuoi testare il branch di sviluppo?** question. If all test passed, you can install safety the script (will be prompted after if you want to install the script ), otherwise open ad issue to dedicated section on Github project!
+
+> **Press S to first question**, and **enter** to all other questions to end script and install software.
 
 ## install 
 ```bash
