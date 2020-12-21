@@ -16,8 +16,8 @@
 #    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
 
 function pulizer(){
-	echo 'rm -rf test.file documenti.importanti tag2 tag1 test.dir tag1'
-	rm -rf test.file documenti.importanti tag2 tag1 test.dir tag1
+	echo 'rm -rf test.file documenti.importanti tag2 tag1 test.dir '
+	rm -rf test.file documenti.importanti tag2 tag1 test.dir 
 
 	if [[ -e $HOME/.tag ]]; then 
 		echo "rm -rf \"$HOME\"/.tag"
@@ -55,6 +55,9 @@ function testAdd(){
 
 	echo -e "\ntagsh tag2 tag"
 	tagsh tag2 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+
+	echo -e "\ntagsh tag1/tag3 tag"
+	tagsh tag1/tag3 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	tagDir=$HOME/.tag
 
@@ -168,14 +171,19 @@ function testList(){
 	el=$(echo "$content" | cut -d" " -f2);
 	[[ $el == '"tag2"' ]] || { echo "l'elemento tag2 sotto il tag tag non è stato trovato"; return 255; }
 	echo -e "controllo passato \u2713\n"
+	echo -n "tag3 ... "
+	el=$(echo "$content" | cut -d" " -f3);
+	[[ $el == '"tag3"' ]] || { echo "l'elemento tag3 sotto il tag tag non è stato trovato"; return 255; }
+	echo -e "controllo passato \u2713\n"
 }
 
 function testRemove() {
+	tagDir=$HOME/.tag
+
 	#controllo errori
 	echo -n "controllo tagsh -r .. ... "
 	tagsh -r .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
-	echo -e "controllo passato \u2713\n"
 
 	echo -n "controllo tagsh -r  test ../documenti  ... "
 	tagsh -r test ../documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
@@ -213,6 +221,70 @@ function testRemove() {
 	[[ -e $tagDir/tag/t12 ]] && { echo "qualcosa è andato storto, il'associazione di t12 al tag tag doveva essere eliminata ma così non è"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
+}
+
+function testRename () {
+	tagDir=$HOME/.tag
+	
+	#controllo errori
+	echo -n "controllo tagsh -n tag  ... "
+	tagsh -n tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+	
+	echo -n "controllo tagsh -n .. tag2 ... "
+	tagsh -n .. tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+	
+	echo -n "controllo tagsh -n tag ~/ciao ... "
+	tagsh -n tag ~/ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n tag .. ... "
+	tagsh -n tag .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n ta!g tag2 ... "
+	tagsh -n ta\!g tag2 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n tag documenti ... "
+	tagsh -n tag documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n tag tag2 .. ... "
+	tagsh -n tag tag2 ..  > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+ 
+	echo -n "controllo tagsh -n tag tag2 c\!ciao ... "
+	tagsh -n tag tag2 c\!ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+
+	echo -n "controllo tagsh -n tag tag2 tag3 ... "
+	tagsh -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n tag tag2 tag3 ... "
+	tagsh -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+	echo -n "controllo tagsh -n tag tag2 ~/tag3 ... "
+	tagsh -n tag tag2 ~/tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "rename in errore (controllo passato) \u2713\n"
+
+
+
+	# controllo rename corretti
+	echo -e "\ncontrollo tagsh -n tag tag2 ... "	
+	tagsh -n tag tag2 || { echo "il comando di rename non è riuscito"; return 255; }
+	[[ -e $tagDir/tag2 && ! -e $tagDir/tag ]] || { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
+	echo -e "controllo passato \u2713\n"
+
+	echo -e "\ncontrollo tagsh -n tag2 tag2 t12 ... "	
+	tagsh -n tag2 tag2 t12 || { echo "il comando di rename non è riuscito"; return 255; }
+	[[ -e $tagDir/tag2/t12 && ! -e $tagDir/tag2/tag2 ]] || { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
+	echo -e "controllo passato \u2713\n"
+
 }
 
 function testUninstall () {
@@ -335,14 +407,15 @@ echo -e "|							"
 echo -e "|-tag						"
 echo -e "|-|-tag1 -> t12			"
 echo -e "|-|-|-tag12				"
-echo -e "|-|-tag2					"
+echo -e "|-|-|-tag3					"
+echo -e "|-|-tag2				"
 echo -e "|______________________	"
 
 
 echo 'mkdir -p test.dir tag1'
 mkdir -p test.dir tag1
 echo -e 'touch test.file documenti.importanti tag2 tag1/tag12\n'
-touch test.file documenti.importanti tag2 tag1/tag12 
+touch test.file documenti.importanti tag2 tag1/tag12 tag1/tag3
 
 echo "test add"
 testAdd || { pulizer; exit 255; }
@@ -355,6 +428,9 @@ testList || { pulizer; exit 255; }
 
 echo -e "\ntest remove"
 testRemove || { pulizer; exit 255; }
+
+echo -e "\ntest rename"
+testRename || { pulizer; exit 255; }
 
 echo -e "\ntest uninstall"
 testUninstall || { echo "disistallazione andata male... "; pulizer; exit 255; }

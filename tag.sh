@@ -4,7 +4,7 @@
 # 		TAG			#
 # -------------------------------------	#
 # Author  = PsykeDady			#
-# Version = 0.6		 		#
+# Version = 0.7		 		#
 # License = GPLv3	 		#
 # 					#
 # Read License at the end of script 	#
@@ -54,6 +54,20 @@ function regexNome(){
 		usage
 		return 255
 	fi
+}
+
+function regexLink(){
+	if [[ "$1" != "" ]]; then
+		case $1 in 
+			\.*|/*) 
+				echo "non utilizzare caratteri di sistema" "$2"
+				usage
+				return 255
+				;;
+			*) 
+				;;
+		esac
+	fi;
 }
 
 function addBookmark (){
@@ -294,11 +308,21 @@ function listTags(){
 		return 255
 	fi
 
+	
 	if [[ "$ntag" == "" ]]; then 
-		listTag "I Tuoi Tag:" "$tagDir"
-	else
-		listTag "$ntag" "$tagpath"
+		ntag="I Tuoi Tag:"
+		tagpath=$tagDir
 	fi;
+	nfile=$(find "$tagpath" -maxdepth 1 -mindepth 1 -type l,d | wc -l )
+	if (( debug == 1 ));
+		then  echo "ci sono $nfile file in $ntag"
+	fi
+
+	if (( nfile <= 0 )); then 
+		echo "non ci sono tag in $(basename "$tagpath")"
+		return 255
+	fi
+	listTag "$ntag" "$tagpath"
 
 }
 
@@ -341,6 +365,7 @@ function removeTag(){
 		echo -e "[DEBUG removeTag]\t\tlink=$nlink" 
 	fi
 
+
 	if (( np< 1 || np>2 )); then 
 		echo "numero di parametri ($np) non validi!";
 		echo "il parametro -r (remove) accetta 1 o 2 parametri"
@@ -351,13 +376,10 @@ function removeTag(){
 	if ! regexNome "$ntag" "il nome tag"; then
 		return 255;
 	fi; 
-
-	## FIXME TODO XXX
-	if [[ "$nlink" != "" ]] && [[ "$nlink" =~ ^(\.|\.\.)(\/.*)?$ ]]; then
-		echo "non utilizzare caratteri di sistema nel nome link!"
-		usage
-		return 255
-	fi; 
+	
+	if [[ $nlink != "" ]] && ! regexLink "$nlink" "nel nome link"; then 
+		return 255;
+	fi
 
 	tagDir="$HOME/.tag";
 
@@ -394,8 +416,113 @@ function removeTag(){
 }
 
 
+function renameTag () {
+	debug=$1
+
+	shift 
+
+	#tagsh -r tagname
+	#tagsh -r tagname elementname
+
+	ntag=""
+	nlink=""
+	rename=""
+	np=0
+
+	if [[ $1 != "" ]]; then 
+		ntag=$1
+		np=$((np+1));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		nlink=$1
+		((np++));
+	fi
+	shift
+	if [[ $1 != "" ]]; then 
+		rename=$1
+		((np++));
+	fi
+	shift
+	
+	
+
+	if (( debug==1 )); then 
+		echo "[DEBUG rename] funzione listTags con parametri (n=$np):"
+		echo -e "[DEBUG rename]\t\ttag=$ntag" 
+		echo -e "[DEBUG rename]\t\tlink=$nlink" 
+		echo -e "[DEBUG rename]\t\trename=$rename" 
+	fi
+
+
+	if (( np< 2 || np>3 )); then 
+		echo "numero di parametri ($np) non validi!";
+		echo "il parametro -n (rename) accetta 2 o 3 parametri"
+		usage 
+		return 255
+	fi
+
+	if ! regexNome "$ntag" "il nome tag"; then
+		return 255;
+	fi; 
+	
+	if [[ $rename != "" ]] ; then
+		if ! regexLink "$nlink" "nel nome link"; then 
+			return 255;
+		fi
+
+		if ! regexNome "$rename" "il nuovo nome"; then 
+			return 255;
+		fi
+	else 
+		if ! regexNome "$nlink" "il nuovo nome"; then 
+			return 255;
+		fi
+	fi
+
+	tagDir="$HOME/.tag";
+
+	if [[ ! -d $tagDir ]]; then 
+		echo "non c'e' nessuna cartella .tag"
+
+		return 255
+	fi
+
+	tagpath=$tagDir/$ntag;
+
+	if [[ ! -d "$tagpath" ]]; then 
+		echo "non c'e' nessun tag $ntag"
+
+		return 255
+	fi
+
+	case $np in
+		2) 
+			nuovo=$tagDir/$nlink
+			if [[ -e $nuovo ]]; then 
+				echo "nome tag già esistente, scegline un altro"
+				return 255;
+			fi
+			mv "$tagpath" "$nuovo";
+		;;
+		3)
+			nuovo=$tagpath/$rename
+			if [[ -e $nuovo ]]; then 
+				echo "nome associazione già esistente, scegline un altro"
+				return 255;
+			fi
+			mv "$tagpath"/$nlink "$nuovo";
+		;;
+		*)
+			echo "errore non gestito"
+			return 255;
+		;;
+	esac
+}
+
 
 # MAIN
+export TAGSH_VERSION=0.7 
 OIFS=$IFS
 IFS=$'\n'
 
@@ -500,12 +627,12 @@ case $op in
 		uscita=$? ;
 	;;
 	"n")
-		echo "funzionalità ancora non gestita!";
+		renameTag $debug "$percorso" "$tagname" "$linkname";
 		uscita=$? ;
 	;;
 	*)	echo "stato di errore non gestito!";
 		usage;
-		uscita=-1 ;
+		uscita=255 ;
 	;;
 esac
 if (( debug==1 )); then 

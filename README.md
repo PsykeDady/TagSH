@@ -1,4 +1,4 @@
-# TagSH (`ver 0.6`)
+# TagSH (`ver 0.7`)
 tag and categorize your directories, find them easily with your file manager or your shell
 
 Language of script messages is italian for now. Sorry international people 
@@ -103,14 +103,39 @@ EXAMPLES:
 `tagsh -r javacodes`
 
 
-## TODO list for next versions:
+## DONE, TODO and PLANS
 
-- ~~command to delete an association~~
-- ~~command to delete an entire tag~~
-- command to rename a tag
-- command to rename an association 
-- ~~debug mode and silent mode (default)~~ 
-- implement language translations file ( ita, eng )
-- minimalist GUI and dolphin service with kdialog
-- minimalist GUI with zenity
+- v 0.1 (DONE)
+  - ~~add a tag~~
+- v 0.2 (DONE)
+  - ~~install uninstall script~~
+  - ~~bookmark management~~ 
+- v 0.3 (DONE)
+  - ~~silent mode debug mode~~
+- v 0.4 (DONE) 
+  - ~~shellcheck improvement~~
+  - ~~function separation~~ 
+  - ~~listTag~~
+- v 0.5 (DONE) 
+  - ~~removeTag~~
+- v 0.6 (DONE)
+  - ~~test script~~
+- v 0.7
+  - ~~renameTag~~
+  - renameTag tests integration
+  - test check tag-version
+- v 0.8
+  - context usage
+  - language files ( ita, eng )
+- v 0.9 
+  - language integration
+- v 1.0 
+  - autocomplete integration with zsh and bash
+  - auto update check
+- v 1.1 to 2.0
+  - GUI
+    - minimalist GUI and dolphin service with kdialog
+    - minimalist GUI with zenity
+    - GNOME menu integration
+    - python fe
 
