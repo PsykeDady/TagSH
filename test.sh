@@ -337,7 +337,7 @@ function testUninstall () {
 
 
 ## avvia i test su tag.sh
-export TEST_TAGSH_VERSION='0.8'
+export TEST_TAGSH_VERSION='0.7'
 
 echo "Il test effettuerà le seguenti operazioni:"
 echo -e "\t- nuovo clone del repo"
