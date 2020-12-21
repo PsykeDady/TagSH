@@ -23,6 +23,11 @@ function pulizer(){
 		echo "rm -rf \"$HOME\"/.tag"
 		rm -rf "$HOME"/.tag
 	fi;
+
+	if [[ -e TagSH.test ]]; then 
+		echo "rm -rf \"TagSH.test\"/.tag"
+		rm -rf TagSH.test
+	fi;
 }
 
 function testAdd(){
@@ -393,7 +398,7 @@ fi
 comp=$(bc <<< "$TAGSH_VERSION < $TEST_TAGSH_VERSION" )
 
 if (( comp )); then
-	echo "\nla versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
+	echo -e "\nla versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
 
 	pulizer
 	exit 255
