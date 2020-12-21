@@ -383,7 +383,7 @@ fi;
 
 git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
 
-echo "controllo di versione..."
+echo -e "\ncontrollo di versione..."
 
 TAGSH_VERSION=$("$nomedir"/tag.sh -v)
 if [[ ! $TAGSH_VERSION =~ ^([0-9]*.)?[0-9]*$ ]]; then 
@@ -393,7 +393,7 @@ fi
 comp=$(bc <<< "$TAGSH_VERSION < $TEST_TAGSH_VERSION" )
 
 if (( comp )); then
-	echo "la versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
+	echo "\nla versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
 
 	pulizer
 	exit 255
