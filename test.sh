@@ -337,6 +337,7 @@ function testUninstall () {
 
 
 ## avvia i test su tag.sh
+export TEST_TAGSH_VERSION='0.8'
 
 echo "Il test effettuerà le seguenti operazioni:"
 echo -e "\t- nuovo clone del repo"
@@ -381,6 +382,24 @@ fi;
 
 
 git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
+
+echo "controllo di versione..."
+
+TAGSH_VERSION=$("$nomedir"/tag.sh -v)
+if [[ ! $TAGSH_VERSION =~ ^([0-9]*.)?[0-9]*$ ]]; then 
+	TAGSH_VERSION=0;
+fi
+
+comp=$(bc <<< "$TAGSH_VERSION < $TEST_TAGSH_VERSION" )
+
+if (( comp )); then
+	echo "la versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
+
+	pulizer
+	exit 255
+# else 
+# 	exit 0
+fi
 
 echo "invoco procedura di installazione..."
 

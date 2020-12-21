@@ -122,7 +122,7 @@ EXAMPLES:
   - ~~test script~~
 - v 0.7
   - ~~renameTag~~
-  - renameTag tests integration
+  - ~~renameTag tests integration~~
   - test check tag-version
 - v 0.8
   - context usage

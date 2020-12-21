@@ -46,6 +46,34 @@ function usage(){
 	echo -e  "Per i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
 }
 
+function tagVersion () {
+	if (( $# == 1 )); then 
+		verbose=$1;
+	elif (( $# == 0 )); then
+		verbose=0;
+	else 
+		echo "il comando version si aspetta 0 o 1 parametro"
+		usage 
+		return 255;
+	fi
+
+	if [[ ! $verbose =~ ^[01]$ ]]; then 
+		echo "il comando version si aspetta 0 o 1 come valore per un parametro"
+		usage 
+		return 255;
+	fi
+
+	nome=$0
+	nome=$(basename "$nome")
+	if (( debug==1 )); then 
+		echo -en "$nome version="
+	fi
+	echo "$TAGSH_VERSION"
+	if (( debug==1 )); then 
+		echo -e  "\nPer i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
+	fi
+}
+
 # Utility
 
 function regexNome(){
@@ -575,6 +603,13 @@ while (( $# > 0 )); do
 				exit 255;
 			fi
 			op="n";;
+		"-v"|"--version") 
+			if [[ $op != "" ]]; then
+				echo "non puoi effettuare due operazioni insieme!";
+				usage
+				exit 255;
+			fi
+			op="v";;
 		*)
 			if [[ $op == "" ]]; then
 				op="a"
@@ -629,6 +664,10 @@ case $op in
 	"n")
 		renameTag $debug "$percorso" "$tagname" "$linkname";
 		uscita=$? ;
+	;;
+	"v")
+		tagVersion $debug;
+		uscita=0
 	;;
 	*)	echo "stato di errore non gestito!";
 		usage;
