@@ -75,6 +75,10 @@ OPTIONS:
 - `-r nometag` remove tag and unlink all it's content
 - `-r nometag nomelink`  unlink an element from specified tag
 - `--remove`  alternative to -r.
+- `-n tagName newName`  :   rename tag into newName
+- `-n tagName linkName newName` 	:	rename tagged link into newName
+- `--rename` alternative to `-n`
+- `-v` or `--versione` : show version number of TagSH, with `-d` show more details
 
 
 WHAT YOU CAN DO:  
@@ -97,10 +101,15 @@ EXAMPLES:
 `tagsh -l`
 - list all file under tag **javacodes**  
 `tagsh -l javacodes`
-- remove tag javacode from eclipse/java element  
+- remove tag **javacode** from *eclipse/java* element  
 `tagsh -r javacodes java`
-- remove tag javacodes and all it's association  
+- remove tag **javacodes** and all it's association  
 `tagsh -r javacodes`
+- rename tag **javacodes** in **javacode**  
+`tagsh -n javacodes javacode`
+- rename *wjava* under **javacodes** tag) association into *workJava*  
+`tagsh -n javacodes wjava workJava`  
+
 
 
 ## DONE, TODO and PLANS
@@ -120,10 +129,10 @@ EXAMPLES:
   - ~~removeTag~~
 - v 0.6 (DONE)
   - ~~test script~~
-- v 0.7
+- v 0.7 (DONE)
   - ~~renameTag~~
   - ~~renameTag tests integration~~
-  - test check tag-version
+  - ~~test check tag-version~~
 - v 0.8
   - context usage
   - language files ( ita, eng )
