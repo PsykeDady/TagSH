@@ -134,6 +134,7 @@ EXAMPLES:
   - ~~renameTag tests integration~~
   - ~~test check tag-version~~
 - v 0.8
+  - make name link capable to include spaces
   - context usage
   - language files ( ita, eng )
 - v 0.9 
