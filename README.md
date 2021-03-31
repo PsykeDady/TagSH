@@ -39,7 +39,7 @@ sudo ln -sf /usr/share/Tagga/tagga.sh /usr/bin/tagga # or link from your custom 
 ```bash
 sudo rm /usr/bin/tagga
 sudo rm -rf /usr/share/Tagga
-rm -rf $HOME/.tag
+rm -rf $HOME/.tagga
 ```
 
 then open these two file with your text editor:  
@@ -87,10 +87,6 @@ WHAT YOU CAN DO:
 WHAT YOU CAN'T DO:  
 - you can use **only** tag name (or link name) with alphanumeric chars
 - you can't tag with same tag two different directory with same name (but you can name it differently!) 
-
-OTHER TRICKS:  
-- to rename tag, you can go to directory `$HOME/.tag` and rename its directory
-- to rename association, go into directory `$HOME/.tag/tagname` and rename file
 
 EXAMPLES:  
 - link directory `/home/yourname/workspace/java` with tag **javacodes** under *wjava* name:  
