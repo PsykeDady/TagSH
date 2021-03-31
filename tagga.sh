@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #########################################
-# 		TAG			#
+# 		TAGGA							#
 # -------------------------------------	#
-# Author  = PsykeDady			#
-# Version = 0.7		 		#
-# License = GPLv3	 		#
-# 					#
+# Author  = PsykeDady					#
+# Version = 0.7		 					#
+# License = GPLv3	 					#
+# 										#
 # Read License at the end of script 	#
 #########################################
 
@@ -67,7 +67,7 @@ function usage(){
 	echo -e  "\t\t$nome -v -d"
 	echo ""
 	echo ""
-	echo -e  "Per i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
+	echo -e  "Per i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/Tagga"
 }
 
 function tagVersion () {
@@ -94,7 +94,7 @@ function tagVersion () {
 	fi
 	echo "$TAGSH_VERSION"
 	if (( debug==1 )); then 
-		echo -e  "\nPer i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/TagSH"
+		echo -e  "\nPer i prossimi sviluppi seguite il progetto su github: https://github.com/PsykeDady/Tagga"
 	fi
 }
 
@@ -128,7 +128,7 @@ function addBookmark (){
 		echo "file user-places non presente"
 		return
 	fi 
-	if  grep  -q  "\.tag" "$Book" ; then
+	if  grep  -q  "\.tagga" "$Book" ; then
 		echo "bookmark presente"
 		return 
 	fi
@@ -141,8 +141,8 @@ function addBookmark (){
 	fi;
 
 	echo "$NB
- <bookmark href=\"file://$HOME/.tag\">
-  <title>TagSH</title>
+ <bookmark href=\"file://$HOME/.tagga\">
+  <title>Tagga</title>
   <info>
    <metadata>
     <bookmark:icon name=\"tag-symbolic\"/>
@@ -159,7 +159,7 @@ function addBookmarkGTK (){
 		return
 	fi
 	Book=$HOME/.config/gtk-3.0/bookmarks
-	if  grep  -q  "\.tag" "$Book" ; then
+	if  grep  -q  "\.tagga" "$Book" ; then
 		echo "bookmark GTK3 presente"
 		return 
 	fi
@@ -168,7 +168,7 @@ function addBookmarkGTK (){
 		cp "$Book" "$Book".old
 	fi;
 
-	echo "file://$HOME/.tag TagSH">>"$Book"
+	echo "file://$HOME/.tagga Tagga">>"$Book"
 	echo "bookmark GTK3 aggiunto"
 }
 
@@ -243,12 +243,12 @@ function attTag() {
 		return 255
 	fi
 
-	TAG_DIR="$HOME/.tag"
+	TAG_DIR="$HOME/.tagga"
 
 	if [ ! -d "$TAG_DIR" ]; then
-		echo "La cartella non esiste, creazione di Tag"
+		echo "La cartella non esiste, creazione di Tagga"
 		if [ -e "$TAG_DIR" ]; then
-			echo "esiste un file chiamato .tag, rinominato in .tag.old"
+			echo "esiste un file chiamato .tagga, rinominato in .tagga.old"
 			#fornire qui la scelta
 			mv "$TAG_DIR" "$TAG_DIR.old" || return
 		fi
@@ -344,10 +344,10 @@ function listTags(){
 		return 255;
 	fi; 
 
-	tagDir="$HOME/.tag"
+	tagDir="$HOME/.tagga"
 
 	if [[ ! -d $tagDir ]]; then 
-		echo "non c'e' nessuna cartella .tag"
+		echo "non c'e' nessuna cartella .tagga"
 
 		return 255
 	fi
@@ -384,8 +384,8 @@ function removeTag(){
 
 	shift 
 
-	#tagsh -r tagname
-	#tagsh -r tagname elementname
+	#tagga -r tagname
+	#tagga -r tagname elementname
 
 	percorso=""
 	ntag=""
@@ -433,10 +433,10 @@ function removeTag(){
 		return 255;
 	fi
 
-	tagDir="$HOME/.tag";
+	tagDir="$HOME/.tagga";
 
 	if [[ ! -d $tagDir ]]; then 
-		echo "non c'e' nessuna cartella .tag"
+		echo "non c'e' nessuna cartella .tagga"
 
 		return 255
 	fi
@@ -473,8 +473,8 @@ function renameTag () {
 
 	shift 
 
-	#tagsh -r tagname
-	#tagsh -r tagname elementname
+	#tagga -r tagname
+	#tagga -r tagname elementname
 
 	ntag=""
 	nlink=""
@@ -532,10 +532,10 @@ function renameTag () {
 		fi
 	fi
 
-	tagDir="$HOME/.tag";
+	tagDir="$HOME/.tagga";
 
 	if [[ ! -d $tagDir ]]; then 
-		echo "non c'e' nessuna cartella .tag"
+		echo "non c'e' nessuna cartella .tagga"
 
 		return 255
 	fi

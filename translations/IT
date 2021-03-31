@@ -1,0 +1,17 @@
+# INSTALLATION FILE
+
+## TEST ADD 
+
+INST_ADD_ERR_KO="Questo tag non doveva essere aggiunto, invece lo \u00e8 stato"
+INST_ADD_ERR_OK="Tag in errore (controllo passato) \u2713\n"
+INST_ADD_KO="tag non aggiunto corrente. uscita..."
+INST_ADD_EXISTS_TAG="\ncontrollo esistenza cartella .tag ..."
+INST_ADD_EXISTS_START="controllo esistenza delle varie directory:"
+INST_ADD_EXISTS_LINK_KO="associazione assente! uscita."
+INST_ADD_EXISTS_LINK_OK="controllo passato \u2713\n"
+
+## TEST BOOKMARK
+INST_BOOK_EXISTS_USERPLACE="controllo bookmark user-places ... "
+INST_BOOK_EXISTS_USERPLACE_KO="il bookmark globale esiste, ma non c'\u00e8 riferimento a tag"
+(linea 101)
+

@@ -1,16 +1,16 @@
-# TagSH (`ver 0.7`)
+# Tagga (`ver 0.7`)
 tag and categorize your directories, find them easily with your file manager or your shell
 
 Language of script messages is italian for now. Sorry international people 
 
 ## test
 
-Test script check if your system is compatible with tagsh ( and if project has some bugs...).
+Test script check if your system is compatible with tagga ( and if project has some bugs...).
 
 After test, will be prompted if you want to install the selected version of tag (be aware to install "*sviluppo branch*" version, sviluppo mean **development branch**). Follow these istruction:
 ```bash 
-git clone https://github.com/PsykeDady/TagSH
-./TagSH/test.sh
+git clone https://github.com/PsykeDady/Tagga
+./Tagga/test.sh
 ```
 
 Press `S` to run script and `N` at **Vuoi testare il branch di sviluppo?** question. If all test passed, you can install safety the script (will be prompted after if you want to install the script ), otherwise open ad issue to dedicated section on Github project!
@@ -19,26 +19,26 @@ Press `S` to run script and `N` at **Vuoi testare il branch di sviluppo?** quest
 
 ## install 
 ```bash
-git clone https://github.com/PsykeDady/TagSH
-./TagSH/install.sh
+git clone https://github.com/PsykeDady/Tagga
+./Tagga/install.sh
 ```
 
 ### or manually
 ```bash
-git clone https://github.com/PsykeDady/TagSH
-sudo mv TagSH /usr/share/TagSH # or move into a custom directory
-sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh # or link from your custom directory, or expand your PATH env
+git clone https://github.com/PsykeDady/Tagga
+sudo mv Tagga /usr/share/Tagga # or move into a custom directory
+sudo ln -sf /usr/share/Tagga/tagga.sh /usr/bin/tagga # or link from your custom directory, or expand your PATH env
 ```
 
 ## uninstall
 ```bash
-/usr/share/tagSH/uninstall.sh
+/usr/share/Tagga/uninstall.sh
 ```
 
 ### or manually
 ```bash
-sudo rm /usr/bin/tagsh
-sudo rm -rf /usr/share/TagSH
+sudo rm /usr/bin/tagga
+sudo rm -rf /usr/share/Tagga
 rm -rf $HOME/.tag
 ```
 
@@ -47,14 +47,14 @@ then open these two file with your text editor:
 file: `$HOME/.config/gtk3-0/bookmarks`  
 delete:
 ```bash
-file:///home/yourname/.tag TagSH
+file:///home/yourname/.tagga Tagga
 ```
 
 file: `$HOME/.local/share/user-places.xbel`  
 delete:
 ```xml
-<bookmark href="file:///home/yourname/.tag">
-  <title>TagSH</title>
+<bookmark href="file:///home/yourname/.tagga">
+  <title>Tagga</title>
   <info>
    <metadata>
     <bookmark:icon name="tag-symbolic"/>
@@ -65,7 +65,7 @@ delete:
 
 ## usage
 
-`tagsh [options] path tagname [link name]`
+`tagga [options] path tagname [link name]`
 
 OPTIONS:  
 - **no option**		: add tag to path or file ( optionally can write a *link name* ) 
@@ -78,7 +78,7 @@ OPTIONS:
 - `-n tagName newName`  :   rename tag into newName
 - `-n tagName linkName newName` 	:	rename tagged link into newName
 - `--rename` alternative to `-n`
-- `-v` or `--versione` : show version number of TagSH, with `-d` show more details
+- `-v` or `--versione` : show version number of Tagga, with `-d` show more details
 
 
 WHAT YOU CAN DO:  
@@ -94,21 +94,21 @@ OTHER TRICKS:
 
 EXAMPLES:  
 - link directory `/home/yourname/workspace/java` with tag **javacodes** under *wjava* name:  
-`tagsh ~/workspace/java javacodes wjava`
+`tagga ~/workspace/java javacodes wjava`
 - link directory `eclipse/java` (relative path) with tag **javacodes** without rename it:  
-`tagsh eclipse/java javacodes`
+`tagga eclipse/java javacodes`
 - list all tag  
-`tagsh -l`
+`tagga -l`
 - list all file under tag **javacodes**  
-`tagsh -l javacodes`
+`tagga -l javacodes`
 - remove tag **javacode** from *eclipse/java* element  
-`tagsh -r javacodes java`
+`tagga -r javacodes java`
 - remove tag **javacodes** and all it's association  
-`tagsh -r javacodes`
+`tagga -r javacodes`
 - rename tag **javacodes** in **javacode**  
-`tagsh -n javacodes javacode`
+`tagga -n javacodes javacode`
 - rename *wjava* under **javacodes** tag) association into *workJava*  
-`tagsh -n javacodes wjava workJava`  
+`tagga -n javacodes wjava workJava`  
 
 
 

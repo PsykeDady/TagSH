@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This file is part of TagSH.
+# This file is part of Tagga.
 #
-#    TagSH is free software: you can redistribute it and/or modify
+#    Tagga is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -13,27 +13,27 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
+#    along with Tagga.  If not, see <http://www.gnu.org/licenses/>.
 
-echo "sudo rm /usr/bin/tagsh"
+echo "sudo rm /usr/bin/tagga"
  
-if ! sudo rm /usr/bin/tagsh; then 
+if ! sudo rm /usr/bin/tagga; then 
 	 echo -e "\nSomething wrong in unistalling process. Try manually following instruction on github."
 	 exit 255
 fi
 
-echo "sudo rm -rf /usr/share/TagSH"
+echo "sudo rm -rf /usr/share/Tagga"
 
 
-if ! sudo rm -rf /usr/share/TagSH; then 
+if ! sudo rm -rf /usr/share/Tagga; then 
 	 echo -e "\nSomething wrong in unistalling process. Try manually following instruction on github."
 	 exit 255
 fi
 
-echo "rm -rf $HOME/.tag"
+echo "rm -rf $HOME/.tagga"
 
 
-if ! rm -rf "$HOME"/.tag; then 
+if ! rm -rf "$HOME"/.tagga; then 
 	 echo -e  "\nSomething wrong in unistalling process. Try manually following instruction on github."
 	 exit 255
 fi
@@ -41,8 +41,8 @@ fi
 #### rimozione bookmark, se esiste
 userplace=$HOME/.local/share/user-places.xbel
 
-if [[ -e $userplace ]] && grep -q "/.tag" "$userplace" ; then
-	nriga=$(cat -n "$userplace" | grep "\.tag" | xargs | cut -d ' ' -f1); 
+if [[ -e $userplace ]] && grep -q "/.tagga" "$userplace" ; then
+	nriga=$(cat -n "$userplace" | grep "\.tagga" | xargs | cut -d ' ' -f1); 
 	if [[ $nriga != "" ]]; then
 		## le righe del bookmark sono 9
 		echo "cat $userplace | sed \"$nriga,$((nriga+7))d\" > $userplace"
@@ -52,9 +52,9 @@ fi
 
 #### rimozione bookmark gtk3, se esiste
 bookmarks=$HOME/.config/gtk-3.0/bookmarks
-if [[ -e $bookmarks ]]  && grep -q "/.tag" "$bookmarks" ; then
-	echo "cat $bookmarks | sed \"/TagSH/d\" > $bookmarks"
-	cat "$bookmarks" | sed "/TagSH/d" | tee "$bookmarks"
+if [[ -e $bookmarks ]]  && grep -q "/.tagga" "$bookmarks" ; then
+	echo "cat $bookmarks | sed \"/Tagga/d\" > $bookmarks"
+	cat "$bookmarks" | sed "/Tagga/d" | tee "$bookmarks"
 fi
 
 echo "successfully uninstalled"

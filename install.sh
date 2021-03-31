@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This file is part of TagSH.
+# This file is part of Tagga.
 #
-#    TagSH is free software: you can redistribute it and/or modify
+#    Tagga is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -13,7 +13,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
+#    along with Tagga.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
@@ -21,11 +21,11 @@
 	echo "cd  $(dirname "$0")"
 	cd "$(dirname "$0")" || exit
 
-	echo "sudo cp -r TagSH /usr/share/TagSH "
-	sudo cp -r . /usr/share/TagSH 
+	echo "sudo cp -r Tagga /usr/share/Tagga "
+	sudo cp -r . /usr/share/Tagga 
 
-	echo "sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh "
-	sudo ln -sf /usr/share/TagSH/tag.sh /usr/bin/tagsh 
+	echo "sudo ln -sf /usr/share/Tagga/tagga.sh /usr/bin/tagga "
+	sudo ln -sf /usr/share/Tagga/tagga.sh /usr/bin/tagga 
 
 	echo "cleaning... remove"
 )
