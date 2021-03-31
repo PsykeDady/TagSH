@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This file is part of TagSH.
+# This file is part of Tagga.
 #
-#    TagSH is free software: you can redistribute it and/or modify
+#    Tagga is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -13,7 +13,7 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with TagSH.  If not, see <http://www.gnu.org/licenses/>.
+#    along with Tagga.  If not, see <http://www.gnu.org/licenses/>.
 
 function pulizer(){
 	echo 'rm -rf test.file documenti.importanti tag2 tag1 test.dir '
@@ -24,45 +24,45 @@ function pulizer(){
 		rm -rf "$HOME"/.tag
 	fi;
 
-	if [[ -e TagSH.test ]]; then 
-		echo "rm -rf \"TagSH.test\"/.tag"
-		rm -rf TagSH.test
+	if [[ -e Tagga.test ]]; then 
+		echo "rm -rf \"Tagga.test\"/.tag"
+		rm -rf Tagga.test
 	fi;
 }
 
 function testAdd(){
 	#errori
-	echo -e "tagsh test.dir test t.dir"
-	tagsh test.dir test 't.dir' > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "tagga test.dir test t.dir"
+	tagga test.dir test 't.dir' > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
 	echo -e "Tag in errore (controllo passato) \u2713\n"
 
-	echo -e "tagsh test.dir te!st tdir"
-	tagsh test.dir te\!st tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "tagga test.dir te!st tdir"
+	tagga test.dir te\!st tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
 	echo -e "Tag in errore (controllo passato) \u2713\n"
 
-	echo -e "tagsh test.dir/ciao test tdir"
-	tagsh test.dir/ciao test tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
+	echo -e "tagga test.dir/ciao test tdir"
+	tagga test.dir/ciao test tdir > /dev/null && { echo "Questo tag non doveva essere aggiunto, invece lo è stato" ; return 255; }
 	echo -e "Tag in errore (controllo passato) \u2713\n"
 
 	#add  con nome 
-	echo -e "tagsh test.dir test tdir"
-	tagsh test.dir test tdir || { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	echo -e "tagga test.dir test tdir"
+	tagga test.dir test tdir || { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	echo -e "\ntagsh tag1 tag t12"
-	tagsh tag1 tag t12 ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	tagga tag1 tag t12 ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	# add senza nome
 	echo -e "\ntagsh $(pwd)/test.file test"
-	tagsh "$(pwd)"/test.file test ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	tagga "$(pwd)"/test.file test ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	echo -e "\ntagsh documenti.importanti documenti"
-	tagsh documenti.importanti documenti ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	tagga documenti.importanti documenti ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	echo -e "\ntagsh tag2 tag"
-	tagsh tag2 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	tagga tag2 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	echo -e "\ntagsh tag1/tag3 tag"
-	tagsh tag1/tag3 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
+	tagga tag1/tag3 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	tagDir=$HOME/.tag
 
@@ -107,7 +107,7 @@ function testBook () {
 
 	if [[ -e $BookGtk ]]; then 
 		echo -n "controllo bookmark gtk ... "
-		snippet="file://$HOME/.tag TagSH"
+		snippet="file://$HOME/.tag Tagga"
 
 		if ! grep -q "$snippet" "$BookGtk"; then 
 			echo "il bookmark gtk esiste, ma non c'è riferimento a tag"
@@ -122,8 +122,8 @@ function testBook () {
 
 function testList(){
 	# solo opzione
-	echo -n "controllo tagsh -l ..."
-	tutti=$(tagsh -l | tail -1)
+	echo -n "controllo tagga -l ..."
+	tutti=$(tagga -l | tail -1)
 
 	echo -n " documenti ..."
 	doct=$(echo "$tutti" | cut -d" " -f1);
@@ -140,17 +140,17 @@ function testList(){
 	echo -e "controllo passato \u2713\n"
 
 	#errori
-	echo -n "controllo tagsh -l .. ... "
-	tagsh -l .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -l .. ... "
+	tagga -l .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "list in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -l c!iao! ... "
-	tagsh -l 'c!iao!' > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -l c!iao! ... "
+	tagga -l 'c!iao!' > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "list in errore (controllo passato) \u2713\n"
 
 	# opzione + parametro
-	echo -n "controllo tagsh -l test ... "
-	content=$(tagsh -l "test" | tail -1)
+	echo -n "controllo tagga -l test ... "
+	content=$(tagga -l "test" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
 	echo -n "tdir ... "
 	[[ $el == '"tdir"' ]] || { echo "l'elemento tdir sotto il tag test non è stato trovato"; return 255; }
@@ -160,15 +160,15 @@ function testList(){
 
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo tagsh -l documenti ... "
-	content=$(tagsh -l "documenti" | tail -1)
+	echo -n "controllo tagga -l documenti ... "
+	content=$(tagga -l "documenti" | tail -1)
 	el=$(echo "$content" | cut -d" " -f1);
 	echo -n "documenti.importanti ... "
 	[[ $el == '"documenti.importanti"' ]] || { echo "l'elemento documenti.importanti sotto il tag documenti non è stato trovato"; return 255; }
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo tagsh -l tag ... "
-	content=$(tagsh -l "tag" | tail -1)
+	echo -n "controllo tagga -l tag ... "
+	content=$(tagga -l "tag" | tail -1)
 	echo -n "t12 ... "
 	el=$(echo "$content" | cut -d" " -f1);
 	[[ $el == '"t12"' ]] || { echo "l'elemento t12 sotto il tag tag non è stato trovato"; return 255; }
@@ -186,42 +186,42 @@ function testRemove() {
 	tagDir=$HOME/.tag
 
 	#controllo errori
-	echo -n "controllo tagsh -r .. ... "
-	tagsh -r .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -r .. ... "
+	tagga -r .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -r  test ../documenti  ... "
-	tagsh -r test ../documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
-	echo -e "remove in errore (controllo passato) \u2713\n"
-	echo -e "controllo passato \u2713\n"
-
-	echo -n "controllo tagsh -r testa  ... "
-	tagsh -r testa > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -r  test ../documenti  ... "
+	tagga -r test ../documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo tagsh -r test documenti  ... "
-	tagsh -r test documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -r testa  ... "
+	tagga -r testa > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo tagsh -r test $(pwd)/documenti  ... "
-	tagsh -r test "$(pwd)"/documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -r test documenti  ... "
+	tagga -r test documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -e "remove in errore (controllo passato) \u2713\n"
+	echo -e "controllo passato \u2713\n"
+
+	echo -n "controllo tagga -r test $(pwd)/documenti  ... "
+	tagga -r test "$(pwd)"/documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "remove in errore (controllo passato) \u2713\n"
 	echo -e "controllo passato \u2713\n"
 
 	# comandi di rimozione
 	## tag intero
-	echo -e "\ncontrollo tagsh -r test ... "	
-	tagsh -r test || { echo "il comando di rimozione non è riuscito"; return 255; }
+	echo -e "\ncontrollo tagga -r test ... "	
+	tagga -r test || { echo "il comando di rimozione non è riuscito"; return 255; }
 
 	[[ -e $tagDir/test ]] && { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
 
 	## associazione sotto tag
-	echo "controllo tagsh -r tag t12 ..."	
-	tagsh -r tag t12 || { echo "il comando di rimozione non è riuscito"; return 255; }
+	echo "controllo tagga -r tag t12 ..."	
+	tagga -r tag t12 || { echo "il comando di rimozione non è riuscito"; return 255; }
 
 	[[ -e $tagDir/tag/t12 ]] && { echo "qualcosa è andato storto, il'associazione di t12 al tag tag doveva essere eliminata ma così non è"; return 255; }
 
@@ -232,61 +232,61 @@ function testRename () {
 	tagDir=$HOME/.tag
 	
 	#controllo errori
-	echo -n "controllo tagsh -n tag  ... "
-	tagsh -n tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag  ... "
+	tagga -n tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 	
-	echo -n "controllo tagsh -n .. tag2 ... "
-	tagsh -n .. tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n .. tag2 ... "
+	tagga -n .. tag > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 	
-	echo -n "controllo tagsh -n tag ~/ciao ... "
-	tagsh -n tag ~/ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag ~/ciao ... "
+	tagga -n tag ~/ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n tag .. ... "
-	tagsh -n tag .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag .. ... "
+	tagga -n tag .. > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n ta!g tag2 ... "
-	tagsh -n ta\!g tag2 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n ta!g tag2 ... "
+	tagga -n ta\!g tag2 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n tag documenti ... "
-	tagsh -n tag documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag documenti ... "
+	tagga -n tag documenti > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n tag tag2 .. ... "
-	tagsh -n tag tag2 ..  > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag tag2 .. ... "
+	tagga -n tag tag2 ..  > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
  
-	echo -n "controllo tagsh -n tag tag2 c\!ciao ... "
-	tagsh -n tag tag2 c\!ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag tag2 c\!ciao ... "
+	tagga -n tag tag2 c\!ciao > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
 
-	echo -n "controllo tagsh -n tag tag2 tag3 ... "
-	tagsh -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag tag2 tag3 ... "
+	tagga -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n tag tag2 tag3 ... "
-	tagsh -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag tag2 tag3 ... "
+	tagga -n tag tag2 tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
-	echo -n "controllo tagsh -n tag tag2 ~/tag3 ... "
-	tagsh -n tag tag2 ~/tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
+	echo -n "controllo tagga -n tag tag2 ~/tag3 ... "
+	tagga -n tag tag2 ~/tag3 > /dev/null && { echo "Questo comando doveva andare in errore, invece è stato eseguito correttemente" ; return 255; }
 	echo -e "rename in errore (controllo passato) \u2713\n"
 
 
 
 	# controllo rename corretti
-	echo -e "\ncontrollo tagsh -n tag tag2 ... "	
-	tagsh -n tag tag2 || { echo "il comando di rename non è riuscito"; return 255; }
+	echo -e "\ncontrollo tagga -n tag tag2 ... "	
+	tagga -n tag tag2 || { echo "il comando di rename non è riuscito"; return 255; }
 	[[ -e $tagDir/tag2 && ! -e $tagDir/tag ]] || { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
 	echo -e "controllo passato \u2713\n"
 
-	echo -e "\ncontrollo tagsh -n tag2 tag2 t12 ... "	
-	tagsh -n tag2 tag2 t12 || { echo "il comando di rename non è riuscito"; return 255; }
+	echo -e "\ncontrollo tagga -n tag2 tag2 t12 ... "	
+	tagga -n tag2 tag2 t12 || { echo "il comando di rename non è riuscito"; return 255; }
 	[[ -e $tagDir/tag2/t12 && ! -e $tagDir/tag2/tag2 ]] || { echo "qualcosa è andato storto, il tag test doveva essere eliminato ma così non è"; return 255; }
 	echo -e "controllo passato \u2713\n"
 
@@ -296,8 +296,8 @@ function testUninstall () {
 
 	stato=0
 
-	echo -n "test /usr/share/TagSH/uninstall.sh ... "
-	/usr/share/TagSH/uninstall.sh > /dev/null || echo "script di disinstallazione non riuscito...";
+	echo -n "test /usr/share/Tagga/uninstall.sh ... "
+	/usr/share/Tagga/uninstall.sh > /dev/null || echo "script di disinstallazione non riuscito...";
 	echo -e "controllo passato \u2713\n"
 
 	echo -n "controllo cartella .tag ... " 
@@ -341,7 +341,7 @@ function testUninstall () {
 }
 
 
-## avvia i test su tag.sh
+## avvia i test su tagga.sh
 export TEST_TAGSH_VERSION='0.7'
 
 echo "Il test effettuerà le seguenti operazioni:"
@@ -357,10 +357,10 @@ echo -e "\t- rimozione di un associazione"
 echo -e "\t- rimozione dell'intero tag"
 echo -e "\t- rinomina tag"
 echo -e "\t- rinomina associazione tag"
-echo -e "\t- disinstallazione di TagSH"
+echo -e "\t- disinstallazione di Tagga"
 echo -e "\t- controllo dei bookmark (con file di backup)"
 echo "SE QUALUNQUE COSA DOVESSE ANDAR MALE, NON INSTALLATE IL SOFTWARE E CONTATTATE LO SVILUPPATORE"
-echo "Sviluppo a cura di PsykeDady, per aggiornamenti, issue e pull request andare su https://www.github.com/PsykeDady/TagSH"
+echo "Sviluppo a cura di PsykeDady, per aggiornamenti, issue e pull request andare su https://www.github.com/PsykeDady/Tagga"
 echo -e "\n\n";
 
 echo "File dei test in via di sviluppo. Procedere con i test? [s/N]"
@@ -371,7 +371,7 @@ if [[ $confirm != "s" ]] && [[ $confirm != "S" ]]; then
 	exit 0
 fi
 
-nomedir="$PWD"/TagSH.test
+nomedir="$PWD"/Tagga.test
 
 
 echo -e "\n"
@@ -389,11 +389,11 @@ if [[ $confirm == "S" || $confirm == "s" ]]; then
 fi;
 
 
-git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
+git clone 'https://www.github.com/PsykeDady/Tagga.git/' "$nomedir" $opzioni
 
 echo -e "\ncontrollo di versione..."
 
-TAGSH_VERSION=$("$nomedir"/tag.sh -v)
+TAGSH_VERSION=$("$nomedir"/tagga.sh -v)
 if [[ ! $TAGSH_VERSION =~ ^([0-9]*.)?[0-9]*$ ]]; then 
 	TAGSH_VERSION=0;
 fi
@@ -401,7 +401,7 @@ fi
 comp=$(bc <<< "$TAGSH_VERSION < $TEST_TAGSH_VERSION" )
 
 if (( comp )); then
-	echo -e "\nla versione di tagsh è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
+	echo -e "\nla versione di Tagga è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
 
 	pulizer
 	exit 255
@@ -416,14 +416,14 @@ echo "\"$nomedir\"/install.sh"
 echo -e "\n\n"
 
 
-if ! which tagsh; then 
-	echo "tagsh non è stato correttamente installato."
+if ! which tagga; then 
+	echo "tagga non è stato correttamente installato."
 	exit 255;
 fi
 
 echo "aggiunta della seguente struttura di tag:"
 echo -e "_______________________	"
-echo -e "|.tag						"
+echo -e "|.tagga					"
 echo -e "|- test					"
 echo -e "|-|- test.dir -> tdir		"
 echo -e "|-|- test.file				"
@@ -435,7 +435,7 @@ echo -e "|-tag						"
 echo -e "|-|-tag1 -> t12			"
 echo -e "|-|-|-tag12				"
 echo -e "|-|-|-tag3					"
-echo -e "|-|-tag2				"
+echo -e "|-|-tag2					"
 echo -e "|______________________	"
 
 
@@ -472,7 +472,7 @@ echo "vuoi installare tag? [S/n]"
 read -r confirm
 
 if [[ "$confirm" != "N" && "$confirm" != "n" ]]; then 
-	git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
+	git clone 'https://www.github.com/PsykeDady/Tagga.git/' "$nomedir" $opzioni
 
 	echo "\"$nomedir\"/install.sh"
 
