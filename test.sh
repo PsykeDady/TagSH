@@ -7,7 +7,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    TagSh is distributed in the hope that it will be useful,
+#    Tagga is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
@@ -48,20 +48,20 @@ function testAdd(){
 	echo -e "tagga test.dir test tdir"
 	tagga test.dir test tdir || { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
-	echo -e "\ntagsh tag1 tag t12"
+	echo -e "\ntagga tag1 tag t12"
 	tagga tag1 tag t12 ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	# add senza nome
-	echo -e "\ntagsh $(pwd)/test.file test"
+	echo -e "\ntagga $(pwd)/test.file test"
 	tagga "$(pwd)"/test.file test ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
-	echo -e "\ntagsh documenti.importanti documenti"
+	echo -e "\ntagga documenti.importanti documenti"
 	tagga documenti.importanti documenti ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
-	echo -e "\ntagsh tag2 tag"
+	echo -e "\ntagga tag2 tag"
 	tagga tag2 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
-	echo -e "\ntagsh tag1/tag3 tag"
+	echo -e "\ntagga tag1/tag3 tag"
 	tagga tag1/tag3 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
 	tagDir=$HOME/.tag
@@ -342,7 +342,7 @@ function testUninstall () {
 
 
 ## avvia i test su tagga.sh
-export TEST_TAGSH_VERSION='0.7'
+export TEST_TAGGA_VERSION='0.7'
 
 echo "Il test effettuerà le seguenti operazioni:"
 echo -e "\t- nuovo clone del repo"
@@ -362,6 +362,9 @@ echo -e "\t- controllo dei bookmark (con file di backup)"
 echo "SE QUALUNQUE COSA DOVESSE ANDAR MALE, NON INSTALLATE IL SOFTWARE E CONTATTATE LO SVILUPPATORE"
 echo "Sviluppo a cura di PsykeDady, per aggiornamenti, issue e pull request andare su https://www.github.com/PsykeDady/Tagga"
 echo -e "\n\n";
+
+echo "Continue with tests? [s/N]"
+read -r confirm
 
 if [[ $confirm != "s" ]] && [[ $confirm != "S" ]]; then 
 	echo "uscita..."
@@ -390,12 +393,12 @@ git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
 
 echo -e "\ncontrollo di versione..."
 
-TAGSH_VERSION=$("$nomedir"/tagga.sh -v)
-if [[ ! $TAGSH_VERSION =~ ^([0-9]*.)?[0-9]*$ ]]; then 
-	TAGSH_VERSION=0;
+TAGGA_VERSION=$("$nomedir"/tagga.sh -v)
+if [[ ! $TAGGA_VERSION =~ ^([0-9]*.)?[0-9]*$ ]]; then 
+	TAGGA_VERSION=0;
 fi
 
-comp=$(bc <<< "$TAGSH_VERSION < $TEST_TAGSH_VERSION" )
+comp=$(bc <<< "$TAGGA_VERSION < $TEST_TAGGA_VERSION" )
 
 if (( comp )); then
 	echo -e "\nla versione di Tagga è minore a quella del test che stai eseguendo. Scarica il branch non di sviluppo e quindi esegui i test da li per versioni vecchie"
