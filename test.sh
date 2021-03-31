@@ -363,9 +363,6 @@ echo "SE QUALUNQUE COSA DOVESSE ANDAR MALE, NON INSTALLATE IL SOFTWARE E CONTATT
 echo "Sviluppo a cura di PsykeDady, per aggiornamenti, issue e pull request andare su https://www.github.com/PsykeDady/Tagga"
 echo -e "\n\n";
 
-echo "File dei test in via di sviluppo. Procedere con i test? [s/N]"
-read -r confirm
-
 if [[ $confirm != "s" ]] && [[ $confirm != "S" ]]; then 
 	echo "uscita..."
 	exit 0
@@ -389,7 +386,7 @@ if [[ $confirm == "S" || $confirm == "s" ]]; then
 fi;
 
 
-git clone 'https://www.github.com/PsykeDady/Tagga.git/' "$nomedir" $opzioni
+git clone 'https://www.github.com/PsykeDady/TagSH.git/' "$nomedir" $opzioni
 
 echo -e "\ncontrollo di versione..."
 
