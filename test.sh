@@ -19,13 +19,13 @@ function pulizer(){
 	echo 'rm -rf test.file documenti.importanti tag2 tag1 test.dir '
 	rm -rf test.file documenti.importanti tag2 tag1 test.dir 
 
-	if [[ -e $HOME/.tag ]]; then 
-		echo "rm -rf \"$HOME\"/.tag"
-		rm -rf "$HOME"/.tag
+	if [[ -e $HOME/.tagga ]]; then 
+		echo "rm -rf \"$HOME\"/.tagga"
+		rm -rf "$HOME"/.tagga
 	fi;
 
 	if [[ -e Tagga.test ]]; then 
-		echo "rm -rf \"Tagga.test\"/.tag"
+		echo "rm -rf \"Tagga.test\"/.tagga"
 		rm -rf Tagga.test
 	fi;
 }
@@ -64,10 +64,10 @@ function testAdd(){
 	echo -e "\ntagga tag1/tag3 tag"
 	tagga tag1/tag3 tag ||  { echo "tag non aggiunto correttamente. uscita..." ; return 255; }
 
-	tagDir=$HOME/.tag
+	tagDir=$HOME/.tagga
 
-	echo -en "\ncontrollo esistenza cartella .tag ... "
-	[[ ! -e $tagDir ]] && echo "la directory .tag non è stata creata! uscita..." && return 255
+	echo -en "\ncontrollo esistenza cartella .tagga ... "
+	[[ ! -e $tagDir ]] && echo "la directory .tagga non è stata creata! uscita..." && return 255
 	echo -e "controllo passato \u2713\n"
 
 	echo -e "controllo esistenza delle varie directory:"
@@ -96,7 +96,7 @@ function testBook () {
 
 	if [[ -e $Book ]]; then 
 		echo -n "controllo bookmark user-places ... " 
-		snippet="<bookmark href=\"file://$HOME/.tag\">"
+		snippet="<bookmark href=\"file://$HOME/.tagga\">"
 
 		if ! grep -q "$snippet" "$Book"; then 
 			echo "il bookmark globale esiste, ma non c'è riferimento a tag"
@@ -107,7 +107,7 @@ function testBook () {
 
 	if [[ -e $BookGtk ]]; then 
 		echo -n "controllo bookmark gtk ... "
-		snippet="file://$HOME/.tag Tagga"
+		snippet="file://$HOME/.tagga Tagga"
 
 		if ! grep -q "$snippet" "$BookGtk"; then 
 			echo "il bookmark gtk esiste, ma non c'è riferimento a tag"
@@ -183,7 +183,7 @@ function testList(){
 }
 
 function testRemove() {
-	tagDir=$HOME/.tag
+	tagDir=$HOME/.tagga
 
 	#controllo errori
 	echo -n "controllo tagga -r .. ... "
@@ -229,7 +229,7 @@ function testRemove() {
 }
 
 function testRename () {
-	tagDir=$HOME/.tag
+	tagDir=$HOME/.tagga
 	
 	#controllo errori
 	echo -n "controllo tagga -n tag  ... "
@@ -300,9 +300,9 @@ function testUninstall () {
 	/usr/share/Tagga/uninstall.sh > /dev/null || echo "script di disinstallazione non riuscito...";
 	echo -e "controllo passato \u2713\n"
 
-	echo -n "controllo cartella .tag ... " 
+	echo -n "controllo cartella .tagga ... " 
 
-	[[ -e $HOME/.tag ]] && { echo "la cartella tag esiste ancora, qualcosa è andato male"; return 255; }
+	[[ -e $HOME/.tagga ]] && { echo "la cartella tag esiste ancora, qualcosa è andato male"; return 255; }
 
 	echo -e "controllo passato \u2713\n"
 	
